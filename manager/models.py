@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -40,7 +41,7 @@ class Equipment(models.Model):
     )
     internal_serial_number = models.CharField(max_length=10, unique=True)
     assigned_to = models.ManyToManyField(
-        Staff, through="EquipmentEmployeeAssignment", blank=True
+        settings.AUTH_USER_MODEL, through="EquipmentEmployeeAssignment", blank=True
     )
 
     class Meta:
@@ -52,7 +53,7 @@ class Equipment(models.Model):
 
 class EquipmentEmployeeAssignment(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    employee = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    employee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     assigned_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
