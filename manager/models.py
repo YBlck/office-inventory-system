@@ -30,6 +30,8 @@ class Category(models.Model):
 
     class Meta:
         ordering = ["name"]
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return self.name
@@ -55,6 +57,8 @@ class Equipment(models.Model):
 
     class Meta:
         ordering = ["name"]
+        verbose_name = "Equipment"
+        verbose_name_plural = "Equipment"
 
     def __str__(self):
         return f"{self.name} - {self.internal_serial_number} ({self.category})"
