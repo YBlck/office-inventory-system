@@ -10,7 +10,9 @@ class Staff(AbstractUser):
         ("support", "Support"),
     ]
     role = models.CharField(
-        max_length=50, choices=ROLE_CHOICES, default="employee"
+        max_length=50,
+        choices=ROLE_CHOICES,
+        default="employee",
     )
 
     class Meta:
@@ -35,13 +37,20 @@ class Category(models.Model):
 
 class Equipment(models.Model):
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name="equipment",
+    )
     manufacturer_serial_number = models.CharField(
         max_length=100, blank=True, null=True
     )
     internal_serial_number = models.CharField(max_length=10, unique=True)
     assigned_to = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, through="EquipmentEmployeeAssignment", blank=True
+        settings.AUTH_USER_MODEL,
+        through="EquipmentEmployeeAssignment",
+        blank=True,
+        related_name="employees",
     )
 
     class Meta:
