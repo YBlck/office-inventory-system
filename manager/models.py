@@ -1,3 +1,59 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-# Create your models here.
+
+class Staff(AbstractUser):
+    ROLE_CHOICES = [
+        ("admin", "Administrator"),
+        ("employee", "Employee"),
+        ("support", "Support"),
+    ]
+    role = models.CharField(
+        max_length=50, choices=ROLE_CHOICES, default="employee"
+    )
+
+    class Meta:
+        ordering = ["username"]
+        verbose_name = "Staff member"
+        verbose_name_plural = "Staff members"
+
+    def __str__(self):
+        return f"{self.username} ({self.role})"
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Equipment(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    manufacturer_serial_number = models.CharField(
+        max_length=100, blank=True, null=True
+    )
+    internal_serial_number = models.CharField(max_length=10, unique=True)
+    assigned_to = models.ManyToManyField(
+        Staff, through="EquipmentEmployeeAssignment", blank=True
+    )
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name} - {self.internal_serial_number} ({self.category})"
+
+
+class EquipmentEmployeeAssignment(models.Model):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
+    employee = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    assigned_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["employee"]
