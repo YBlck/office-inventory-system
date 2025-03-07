@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if category_list %}
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  {% for category in category_list %}
+    <tr>
+      <td>{{ category.name }}</td>
+      <td>{{ category.description }}</td>
+    </tr>
+  {% endfor %}
+
+  </table>
+  {% else %}
+    <p>There are no categories in the system.</p>
+  {% endif %}
+{% endblock %}

@@ -30,3 +30,7 @@ class StaffListView(generic.ListView):
 
 class StaffDetailView(generic.DetailView):
     model = Staff
+
+
+class CategoryListView(generic.ListView):
+    model = Category
