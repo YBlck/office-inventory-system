@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
 
 
 class Staff(AbstractUser):
@@ -23,6 +24,8 @@ class Staff(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.role})"
 
+    def get_absolute_url(self):
+        return reverse("manager:staff-detail", kwargs={"pk": self.pk})
 
 class Category(models.Model):
     name = models.CharField(max_length=50)

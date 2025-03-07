@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views import generic
 
 from manager.models import Staff, Equipment, Category
 
@@ -21,3 +22,11 @@ def index(request):
     }
 
     return render(request, "manager/index.html", context=context)
+
+
+class StaffListView(generic.ListView):
+    model = Staff
+
+
+class StaffDetailView(generic.DetailView):
+    model = Staff
