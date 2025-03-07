@@ -27,6 +27,9 @@ class Staff(AbstractUser):
     def get_absolute_url(self):
         return reverse("manager:staff-detail", kwargs={"pk": self.pk})
 
+    def get_role_display(self):
+        return dict(Staff.ROLE_CHOICES)[self.role]
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)

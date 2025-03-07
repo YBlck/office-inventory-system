@@ -7,6 +7,6 @@
 
   <p><strong>First name:</strong> {{ staff.first_name }}</p>
   <p><strong>Last name:</strong> {{ staff.last_name }}</p>
-  <p><strong>Role:</strong> {{ staff.role }}</p>
+  <p><strong>Role:</strong> {{ staff.get_role_display }}</p>
 
 {% endblock %}
