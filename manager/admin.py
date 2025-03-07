@@ -2,8 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
-from manager.models import Staff, Equipment, Category
-
+from manager.models import (
+    Staff,
+    Equipment,
+    Category,
+    EquipmentEmployeeAssignment
+)
 
 admin.site.unregister(Group)
 
@@ -22,6 +26,7 @@ class StaffAdmin(UserAdmin):
                     "fields": (
                         "first_name",
                         "last_name",
+                        "email",
                         "role",
                     )
                 },
@@ -32,10 +37,17 @@ class StaffAdmin(UserAdmin):
     list_filter = ("role",)
 
 
+class EquipmentEmployeeAssignmentInline(admin.TabularInline):
+    model = EquipmentEmployeeAssignment
+    extra = 1
+
+
 @admin.register(Equipment)
 class EquipmentAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     list_filter = ("category",)
+    list_display = ("name", "internal_serial_number", "category", "added_at")
+    inlines = [EquipmentEmployeeAssignmentInline]
 
 
 @admin.register(Category)
