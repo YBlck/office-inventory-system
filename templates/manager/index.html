@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Gear Tracker</h1>
+    <p>Welcome to the best Office Equipment Management System!</p>
+    <h2>Dynamic content</h2>
+    <p>The Gear Tracker has the following record counts:</p>
+    <ul>
+        <li><strong>Employee:</strong> {{ num_staff }}</li>
+        <li><strong>Equipment:</strong> {{ num_equipment }}</li>
+        <li><strong>Categories:</strong> {{ num_categories }}</li>
+    </ul>
+
+    <p>You have visited this page
+        {{ num_visits }} time{{ num_visits|pluralize }}.
+    </p>
+
+{% endblock %}
