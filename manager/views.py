@@ -34,3 +34,11 @@ class StaffDetailView(generic.DetailView):
 
 class CategoryListView(generic.ListView):
     model = Category
+
+
+class EquipmentListView(generic.ListView):
+    model = Equipment
+
+
+class EquipmentDetailView(generic.DetailView):
+    model = Equipment

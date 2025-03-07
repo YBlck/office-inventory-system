@@ -27,6 +27,7 @@ class Staff(AbstractUser):
     def get_absolute_url(self):
         return reverse("manager:staff-detail", kwargs={"pk": self.pk})
 
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
@@ -66,6 +67,9 @@ class Equipment(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.internal_serial_number} ({self.category})"
+
+    def get_absolute_url(self):
+        return reverse("manager:equipment-detail", kwargs={"pk": self.pk})
 
 
 class EquipmentEmployeeAssignment(models.Model):

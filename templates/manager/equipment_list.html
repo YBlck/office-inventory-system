@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Equipment List</h1>
+  {% if equipment_list %}
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Serial number</th>
+      <th>Category</th>
+      <th>Added at</th>
+    </tr>
+  {% for equipment in equipment_list %}
+    <tr>
+      <td><a href="{{ equipment.get_absolute_url }}">{{ equipment.name }}</a></td>
+      <td>{{ equipment.internal_serial_number }}</td>
+      <td>{{ equipment.category }}</td>
+      <td>{{ equipment.added_at }}</td>
+    </tr>
+  {% endfor %}
+
+  </table>
+  {% else %}
+    <p>There are no equipment in the system.</p>
+  {% endif %}
+{% endblock %}
