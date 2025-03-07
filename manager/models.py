@@ -48,6 +48,7 @@ class Equipment(models.Model):
         max_length=100, blank=True, null=True
     )
     internal_serial_number = models.CharField(max_length=10, unique=True)
+    added_at = models.DateTimeField(auto_now_add=True)
     assigned_to = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through="EquipmentEmployeeAssignment",
