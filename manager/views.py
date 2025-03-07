@@ -1,3 +1,23 @@
 from django.shortcuts import render
 
-# Create your views here.
+from manager.models import Staff, Equipment, Category
+
+
+def index(request):
+    """View function for the home page of the site."""
+
+    num_staff = Staff.objects.count()
+    num_equipment = Equipment.objects.count()
+    num_categories = Category.objects.count()
+
+    num_visits = request.session.get("num_visits", 0)
+    request.session["num_visits"] = num_visits + 1
+
+    context = {
+        "num_staff": num_staff,
+        "num_equipment": num_equipment,
+        "num_categories": num_categories,
+        "num_visits": num_visits + 1,
+    }
+
+    return render(request, "manager/index.html", context=context)
