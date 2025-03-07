@@ -66,7 +66,10 @@ class Equipment(models.Model):
 
 class EquipmentEmployeeAssignment(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    employee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    employee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
     assigned_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
