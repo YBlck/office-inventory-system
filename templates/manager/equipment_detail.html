@@ -15,4 +15,38 @@
     Update
   </a>
 
+  <h3>Assigned to:</h3>
+
+  {% if equipment.assigned_to.all %}
+
+    <table class="table">
+    <tr>
+      <th>Username</th>
+      <th>Full Name</th>
+      <th>Assignment date</th>
+    </tr>
+
+      {% for employee in equipment.assigned_to.all %}
+      <tr>
+        <td>
+          <a href="{% url 'manager:staff-detail' pk=employee.id %}">{{ employee.username }}</a>
+        </td>
+        <td>
+          {{ employee.first_name }} {{ employee.last_name }}
+        </td>
+        <td>
+          {% for assignment in equipment.assignments.all %}
+            {% if assignment.employee == employee %}
+              {{ assignment.assigned_at }}
+            {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+      </table>
+  {% else %}
+    <p>No assignment yet.</p>
+  {% endif %}
+
+
 {% endblock %}
