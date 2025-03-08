@@ -125,6 +125,7 @@ class CategoryDeleteView(generic.DeleteView):
 class EquipmentListView(generic.ListView):
     model = Equipment
     paginate_by = 10
+    queryset = Equipment.objects.select_related("category")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(EquipmentListView, self).get_context_data(**kwargs)
@@ -136,14 +137,13 @@ class EquipmentListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         form = EquipmentNameSearchForm(self.request.GET)
 
         if form.is_valid():
-            return queryset.filter(
+            return self.queryset.filter(
                 name__icontains=form.cleaned_data["name"].strip()
             )
-        return queryset
+        return self.queryset
 
 
 class EquipmentDetailView(generic.DetailView):
