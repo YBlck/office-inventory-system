@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Equipment List</h1>
+
+  <h1>
+    Equipment List
+    <a href="{% url 'manager:equipment-create' %}" class="btn btn-primary link-to-page">
+      Create
+    </a>
+  </h1>
+
   {% if equipment_list %}
   <table class="table">
     <tr>

@@ -7,4 +7,12 @@
   <p><strong>Manufacturer serial number:</strong> {{ equipment.manufacturer_serial_number }}</p>
   <p><strong>Added to system at:</strong> {{ equipment.added_at }}</p>
 
+  <a href="{% url 'manager:equipment-delete' pk=equipment.id %}" class="btn btn-danger">
+    Delete
+  </a>
+
+  <a href="{% url 'manager:equipment-update' pk=equipment.id %}" class="btn btn-secondary">
+    Update
+  </a>
+
 {% endblock %}

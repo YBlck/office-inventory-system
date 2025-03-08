@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from manager.forms import StaffForm, StaffUpdateForm
+from manager.forms import StaffForm, StaffUpdateForm, EquipmentForm
 from manager.models import Staff, Equipment, Category
 
 
@@ -79,3 +79,18 @@ class EquipmentListView(generic.ListView):
 
 class EquipmentDetailView(generic.DetailView):
     model = Equipment
+
+
+class EquipmentCreateView(generic.CreateView):
+    model = Equipment
+    form_class = EquipmentForm
+
+
+class EquipmentUpdateView(generic.UpdateView):
+    model = Equipment
+    form_class = EquipmentForm
+
+
+class EquipmentDeleteView(generic.DeleteView):
+    model = Equipment
+    success_url = reverse_lazy("manager:equipment-list")
