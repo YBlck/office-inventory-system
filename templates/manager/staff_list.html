@@ -9,7 +9,6 @@
     </a>
   </h1>
 
-
   {% if staff_list %}
   <table class="table">
     <tr>
@@ -18,12 +17,12 @@
       <th>Last name</th>
       <th>Role</th>
     </tr>
-  {% for worker in staff_list %}
+  {% for employee in staff_list %}
     <tr>
-      <td><a href="{{ worker.get_absolute_url }}">{{ worker.username }} {% if user == worker %} (Me){% endif %}</a></td>
-      <td>{{ worker.first_name }}</td>
-      <td>{{ worker.last_name }}</td>
-      <td>{{ worker.get_role_display }}</td>
+      <td><a href="{{ employee.get_absolute_url }}">{{ employee.username }} {% if user == employee %} (Me){% endif %}</a></td>
+      <td>{{ employee.first_name }}</td>
+      <td>{{ employee.last_name }}</td>
+      <td>{{ employee.get_role_display }}</td>
     </tr>
   {% endfor %}
 
