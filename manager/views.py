@@ -7,6 +7,8 @@ from manager.forms import (
     StaffUpdateForm,
     EquipmentForm,
     StaffUsernameSearchForm,
+    CategoryNameSearchForm,
+    EquipmentNameSearchForm,
 )
 from manager.models import Staff, Equipment, Category
 
@@ -83,6 +85,25 @@ class CategoryListView(generic.ListView):
     model = Category
     paginate_by = 10
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CategoryListView, self).get_context_data(**kwargs)
+        name = self.request.GET.get("name", "")
+
+        context["search_form"] = CategoryNameSearchForm(
+            initial={"name": name}
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = CategoryNameSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                name__icontains=form.cleaned_data["name"].strip()
+            )
+        return queryset
+
 
 class CategoryCreateView(generic.CreateView):
     model = Category
@@ -104,6 +125,25 @@ class CategoryDeleteView(generic.DeleteView):
 class EquipmentListView(generic.ListView):
     model = Equipment
     paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(EquipmentListView, self).get_context_data(**kwargs)
+        name = self.request.GET.get("name", "")
+
+        context["search_form"] = EquipmentNameSearchForm(
+            initial={"name": name}
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = EquipmentNameSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                name__icontains=form.cleaned_data["name"].strip()
+            )
+        return queryset
 
 
 class EquipmentDetailView(generic.DetailView):

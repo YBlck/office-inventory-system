@@ -65,3 +65,25 @@ def validate_serial_number(serial_number):
         raise ValidationError("Last 7 characters should be digits")
 
     return serial_number
+
+
+class EquipmentNameSearchForm(forms.Form):
+    name = forms.CharField(
+        max_length=50,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Search by name"}
+        ),
+    )
+
+
+class CategoryNameSearchForm(forms.Form):
+    name = forms.CharField(
+        max_length=50,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Search by name"}
+        ),
+    )
