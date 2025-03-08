@@ -1,6 +1,8 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
 
+from manager.forms import StaffForm, StaffUpdateForm
 from manager.models import Staff, Equipment, Category
 
 
@@ -31,6 +33,22 @@ class StaffListView(generic.ListView):
 
 class StaffDetailView(generic.DetailView):
     model = Staff
+
+
+class StaffCreateView(generic.CreateView):
+    model = Staff
+    form_class = StaffForm
+
+
+class StaffUpdateView(generic.UpdateView):
+    model = Staff
+    form_class = StaffUpdateForm
+
+
+class StaffDeleteView(generic.DeleteView):
+    model = Staff
+    success_url = reverse_lazy("manager:staff-list")
+
 
 
 class CategoryListView(generic.ListView):
