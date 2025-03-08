@@ -1,17 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Category List</h1>
+
+  <h1>
+    Category List
+    <a href="{% url 'manager:category-create' %}" class="btn btn-primary link-to-page">
+      Create
+    </a>
+  </h1>
+
   {% if category_list %}
   <table class="table">
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th>Modify</th>
+      <th>Delete</th>
     </tr>
   {% for category in category_list %}
     <tr>
       <td>{{ category.name }}</td>
       <td>{{ category.description }}</td>
+      <td><a href="{% url 'manager:category-update' category.id %}" class="btn btn-secondary btn-sm">Modify</a>
+      <td><a href="{% url 'manager:category-delete' category.id %}" class="btn btn-danger btn-sm">Delete</a>
     </tr>
   {% endfor %}
 

@@ -50,10 +50,26 @@ class StaffDeleteView(generic.DeleteView):
     success_url = reverse_lazy("manager:staff-list")
 
 
-
 class CategoryListView(generic.ListView):
     model = Category
     paginate_by = 10
+
+
+class CategoryCreateView(generic.CreateView):
+    model = Category
+    fields = "__all__"
+    success_url = reverse_lazy("manager:category-list")
+
+
+class CategoryUpdateView(generic.UpdateView):
+    model = Category
+    fields = "__all__"
+    success_url = reverse_lazy("manager:category-list")
+
+
+class CategoryDeleteView(generic.DeleteView):
+    model = Category
+    success_url = reverse_lazy("manager:category-list")
 
 
 class EquipmentListView(generic.ListView):

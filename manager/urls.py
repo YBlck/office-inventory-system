@@ -10,6 +10,9 @@ from manager.views import (
     StaffCreateView,
     StaffUpdateView,
     StaffDeleteView,
+    CategoryCreateView,
+    CategoryUpdateView,
+    CategoryDeleteView,
 )
 
 app_name = "manager"
@@ -21,6 +24,9 @@ urlpatterns = [
     path("staff/<int:pk>/update/", StaffUpdateView.as_view(), name="staff-update"),
     path("staff/<int:pk>/delete/", StaffDeleteView.as_view(), name="staff-delete"),
     path("categories/", CategoryListView.as_view(), name="category-list"),
+    path("categories/create/", CategoryCreateView.as_view(), name="category-create"),
+    path("categories/<int:pk>/update", CategoryUpdateView.as_view(), name="category-update"),
+    path("categories/<int:pk>/delete", CategoryDeleteView.as_view(), name="category-delete"),
     path("equipment/", EquipmentListView.as_view(), name="equipment-list"),
     path(
         "equipment/<int:pk>/",
