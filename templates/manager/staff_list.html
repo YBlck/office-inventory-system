@@ -4,9 +4,15 @@
 
   <h1>
     Employee List
-    <a href="{% url 'manager:staff-create' %}" class="btn btn-primary link-to-page">
-      Create
-    </a>
+    {% if user.role == "admin" %}
+      <a href="{% url 'manager:staff-create' %}" class="btn btn-primary link-to-page">
+        Create
+      </a>
+    {% else %}
+      <a href="#" class="btn btn-secondary link-to-page disabled" disabled>
+        Create
+      </a>
+    {% endif %}
   </h1>
 
   {% if staff_list %}
