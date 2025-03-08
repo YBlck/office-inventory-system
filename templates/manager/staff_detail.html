@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>
-    Username: {{ staff.username }}
+    User: {{ staff.username }}
   </h1>
 
   <p><strong>First name:</strong> {{ staff.first_name }}</p>
@@ -16,5 +16,40 @@
   <a href="{% url 'manager:staff-update' pk=staff.id %}" class="btn btn-secondary">
     Update
   </a>
+
+  <hr>
+
+  <h3>Equipment in use:</h3>
+
+  {% if staff.assigned_equipment.exists %}
+    <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Assignment date</th>
+    </tr>
+
+      {% for equipment in staff.assigned_equipment.all %}
+      <tr>
+        <td>
+          <a href="{% url 'manager:equipment-detail' pk=equipment.id %}">{{ equipment.name }}</a>
+        </td>
+        <td>
+          {{ equipment.category }}
+        </td>
+        <td>
+          {% for assignment in equipment.assignments.all %}
+            {% if assignment.employee == staff %}
+              {{ assignment.assigned_at }}
+            {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+
+    </table>
+  {% else %}
+    <p>No equipment assigned yet.</p>
+  {% endif %}
 
 {% endblock %}

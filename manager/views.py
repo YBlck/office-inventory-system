@@ -33,6 +33,11 @@ class StaffListView(generic.ListView):
 
 class StaffDetailView(generic.DetailView):
     model = Staff
+    queryset = Staff.objects.prefetch_related(
+        "assigned_equipment__assignments__employee"
+    ).prefetch_related(
+        "assigned_equipment__category"
+    )
 
 
 class StaffCreateView(generic.CreateView):
