@@ -26,6 +26,7 @@ def index(request):
 
 class StaffListView(generic.ListView):
     model = Staff
+    paginate_by = 10
 
 
 class StaffDetailView(generic.DetailView):
@@ -34,10 +35,12 @@ class StaffDetailView(generic.DetailView):
 
 class CategoryListView(generic.ListView):
     model = Category
+    paginate_by = 10
 
 
 class EquipmentListView(generic.ListView):
     model = Equipment
+    paginate_by = 10
 
 
 class EquipmentDetailView(generic.DetailView):
