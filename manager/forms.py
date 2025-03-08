@@ -28,6 +28,17 @@ class StaffUpdateForm(forms.ModelForm):
         fields = ("role", "email", "first_name", "last_name")
 
 
+class StaffUsernameSearchForm(forms.Form):
+    username = forms.CharField(
+        max_length=50,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"placeholder": "Search by username"}
+        ),
+    )
+
+
 class EquipmentForm(forms.ModelForm):
     assigned_to = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),

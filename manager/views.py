@@ -2,7 +2,12 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from manager.forms import StaffForm, StaffUpdateForm, EquipmentForm
+from manager.forms import (
+    StaffForm,
+    StaffUpdateForm,
+    EquipmentForm,
+    StaffUsernameSearchForm,
+)
 from manager.models import Staff, Equipment, Category
 
 
@@ -29,6 +34,25 @@ def index(request):
 class StaffListView(generic.ListView):
     model = Staff
     paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(StaffListView, self).get_context_data(**kwargs)
+        username = self.request.GET.get("username", "")
+
+        context["search_form"] = StaffUsernameSearchForm(
+            initial={"username": username}
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = StaffUsernameSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                username__icontains=form.cleaned_data["username"].strip()
+            )
+        return queryset
 
 
 class StaffDetailView(generic.DetailView):
