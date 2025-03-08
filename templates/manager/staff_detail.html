@@ -9,4 +9,12 @@
   <p><strong>Last name:</strong> {{ staff.last_name }}</p>
   <p><strong>Role:</strong> {{ staff.get_role_display }}</p>
 
+  <a href="{% url 'manager:staff-delete' pk=staff.id %}" class="btn btn-danger">
+    Delete
+  </a>
+
+  <a href="{% url 'manager:staff-update' pk=staff.id %}" class="btn btn-secondary">
+    Update
+  </a>
+
 {% endblock %}
