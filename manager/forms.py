@@ -7,15 +7,16 @@ from manager.models import Staff, Equipment
 
 
 class StaffForm(UserCreationForm):
-    first_name = forms.CharField(max_length=50, required=True)
-    last_name = forms.CharField(max_length=50, required=True)
     email = forms.EmailField(max_length=100, required=True)
 
     class Meta(UserCreationForm.Meta):
         model = Staff
         fields = UserCreationForm.Meta.fields + (
-            "email", "first_name", "last_name"
+            "email",
         )
+        help_texts = {
+            "username": None,
+        }
 
 
 class StaffUpdateForm(forms.ModelForm):
@@ -34,7 +35,7 @@ class StaffUsernameSearchForm(forms.Form):
         required=False,
         label="",
         widget=forms.TextInput(
-            attrs={"placeholder": "Search by username"}
+            attrs={"class": "form-control","placeholder": "Search by username"}
         ),
     )
 
@@ -73,7 +74,7 @@ class EquipmentNameSearchForm(forms.Form):
         required=False,
         label="",
         widget=forms.TextInput(
-            attrs={"placeholder": "Search by name"}
+            attrs={"class": "form-control", "placeholder": "Search by name"}
         ),
     )
 
@@ -84,6 +85,6 @@ class CategoryNameSearchForm(forms.Form):
         required=False,
         label="",
         widget=forms.TextInput(
-            attrs={"placeholder": "Search by name"}
+            attrs={"class": "form-control", "placeholder": "Search by name"}
         ),
     )

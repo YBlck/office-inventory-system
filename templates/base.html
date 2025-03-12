@@ -2,44 +2,68 @@
 <html lang="en">
 
 <head>
-    {% block title %}<title>Gear Tracker</title>{% endblock %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
-    <!-- Add additional CSS in static file -->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+  <!-- Primary Meta Tags -->
+  <title>
+    Gear Tracker
+  </title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="title" content="Pixel - Free Bootstrap 5 UI Kit">
+  <meta name="author" content="Themesberg">
+  <meta name="description"
+        content="Open source and free Bootstrap 5 UI Kit featuring 80 UI components, 5 example pages, and a Gulp and Sass workflow.">
+  <link rel="canonical" href="https://appseed.us/django/django-pixel-bootstrap-uikit">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://demo.themesberg.com/pixel-bootstrap-5-ui-kit">
+  <meta property="og:title" content="Pixel - Free Bootstrap 5 UI Kit">
+  <meta property="og:description"
+        content="Open source and free Bootstrap 5 UI Kit featuring 80 UI components, 5 example pages, and a Gulp and Sass workflow.">
+  <meta property="og:image"
+        content="https://themesberg.s3.us-east-2.amazonaws.com/public/products/pixel-lite/pixel-lite-preview.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://demo.themesberg.com/pixel-bootstrap-5-ui-kit">
+  <meta property="twitter:title" content="Pixel - Free Bootstrap 5 UI Kit">
+  <meta property="twitter:description"
+        content="Open source and free Bootstrap 5 UI Kit featuring 80 UI components, 5 example pages, and a Gulp and Sass workflow.">
+  <meta property="twitter:image"
+        content="https://themesberg.s3.us-east-2.amazonaws.com/public/products/pixel-lite/pixel-lite-preview.jpg">
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="120x120" href="{{ ASSETS_ROOT }}/img/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ ASSETS_ROOT }}/img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ ASSETS_ROOT }}/img/favicon/favicon-16x16.png">
+  <link rel="manifest" href="{{ ASSETS_ROOT }}/img/favicon/site.webmanifest">
+  <link rel="mask-icon" href="{{ ASSETS_ROOT }}/img/favicon/safari-pinned-tab.svg" color="#ffffff">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Fontawesome -->
+  <link type="text/css" href="{{ ASSETS_ROOT }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+
+  <!-- Pixel CSS -->
+  <link type="text/css" href="{{ ASSETS_ROOT }}/css/pixel.css" rel="stylesheet">
+  <!-- Add additional CSS in static file -->
+  <link type="text/css" href="{{ ASSETS_ROOT }}/css/styles.css" rel="stylesheet">
+
 </head>
-
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-2">
 
-            {% block sidebar %}
-                {% include "includes/sidebar.html" %}
-            {% endblock %}
+{% block navigation %}
+  {% include 'includes/navigation.html' %}
+{% endblock %}
 
-        </div>
-        <div class="col-sm-10 ">
+{% block content %}{% endblock content %}
 
-            {% if search_form %}
-              {% block search %}
-                {% include "includes/search_form.html" %}
-              {% endblock %}
-            {% endif %}
+{% include 'includes/scripts.html' %}
 
-            {% block content %}{% endblock %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
 
-            {% block pagination %}
-                {% include "includes/pagination.html" %}
-            {% endblock %}
-
-        </div>
-    </div>
-</div>
 </body>
-
 </html>

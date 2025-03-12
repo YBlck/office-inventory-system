@@ -71,6 +71,12 @@ class StaffCreateView(generic.CreateView):
     form_class = StaffForm
 
 
+class StaffRegisterView(generic.CreateView):
+    model = Staff
+    form_class = StaffForm
+    template_name = "registration/register.html"
+
+
 class StaffUpdateView(generic.UpdateView):
     model = Staff
     form_class = StaffUpdateForm
@@ -83,7 +89,7 @@ class StaffDeleteView(generic.DeleteView):
 
 class CategoryListView(generic.ListView):
     model = Category
-    paginate_by = 10
+    paginate_by = 8
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CategoryListView, self).get_context_data(**kwargs)
@@ -109,6 +115,10 @@ class CategoryCreateView(generic.CreateView):
     model = Category
     fields = "__all__"
     success_url = reverse_lazy("manager:category-list")
+
+
+class CategoryDetailView(generic.DetailView):
+    model = Category
 
 
 class CategoryUpdateView(generic.UpdateView):

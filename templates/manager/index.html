@@ -1,18 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Gear Tracker</h1>
-    <p>Welcome to the best Office Equipment Management System!</p>
-    <h2>Dynamic content</h2>
-    <p>The Gear Tracker has the following record counts:</p>
-    <ul>
-        <li><strong>Employees:</strong> {{ num_staff }}</li>
-        <li><strong>Equipment:</strong> {{ num_equipment }}</li>
-        <li><strong>Categories:</strong> {{ num_categories }}</li>
-    </ul>
+<main>
 
-    <p>You have visited this page
-        {{ num_visits }} time{{ num_visits|pluralize }}.
-    </p>
+  {#        {% include 'includes/preloader.html' %}#}
 
+  <!-- Hero -->
+  <section class="section-header overflow-hidden pt-7 pt-lg-8 pb-9 pb-lg-10 bg-primary text-white">
+    <div class="container">
+      <div class="col-12 text-center">
+        <h1 class="fw-bolder display-2">
+          Gear Tracker
+        </h1>
+        <h2 class="lead fw-normal text-muted mb-4 px-lg-10">
+          Welcome to your simple office equipment management system.
+        </h2>
+        <p class="text-muted">You have visited this page <strong>{{ num_visits }}</strong> time{{ num_visits|pluralize }}.</p>
+      </div>
+    </div>
+    <figure class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2">
+      <svg class="fill-white"
+           xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 185.4">
+        <path d="M3000,0v185.4H0V0c496.4,115.6,996.4,173.4,1500,173.4S2503.6,115.6,3000,0z"></path>
+      </svg>
+    </figure>
+  </section>
+
+  {#        <section class="section section-lg">#}
+  <section class="mt-5">
+    <div class="container">
+      <div class="row justify-content-center mb-5 mb-lg-6">
+        <div class="col-6 col-md-3 text-center mb-4">
+          <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+            <a href="{% url 'manager:staff-list' %}">
+              <span class="fas fa-user text-tertiary"></span>
+            </a>
+          </div>
+          <h3 class="fw-bolder">{{ num_staff }}</h3>
+          <p class="text-gray">Employee registered</p>
+        </div>
+        <div class="col-6 col-md-3 text-center mb-4">
+          <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+            <a href="{% url 'manager:category-list' %}">
+              <span class="fas fa-list text-tertiary"></span>
+            </a>
+          </div>
+          <h3 class="fw-bolder">{{ num_categories }}</h3>
+          <p class="text-gray">Total categories</p>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+            <a href="{% url 'manager:equipment-list' %}">
+              <span class="fas fa-desktop text-tertiary"></span>
+            </a>
+          </div>
+          <h3 class="fw-bolder">{{ num_equipment }}</h3>
+          <p class="text-gray">Number of equipment</p>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+            <span class="fas fa-wrench text-tertiary"></span>
+          </div>
+          <h3 class="fw-bolder">0</h3>
+          <p class="text-gray">Support request</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
 {% endblock %}

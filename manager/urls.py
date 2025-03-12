@@ -16,6 +16,8 @@ from manager.views import (
     EquipmentCreateView,
     EquipmentUpdateView,
     EquipmentDeleteView,
+    StaffRegisterView,
+    CategoryDetailView,
 )
 
 app_name = "manager"
@@ -24,6 +26,7 @@ urlpatterns = [
     path("staff/", StaffListView.as_view(), name="staff-list"),
     path("staff/<int:pk>/", StaffDetailView.as_view(), name="staff-detail"),
     path("staff/create/", StaffCreateView.as_view(), name="staff-create"),
+    path("staff/register/", StaffRegisterView.as_view(), name="staff-register"),
     path(
         "staff/<int:pk>/update/",
         StaffUpdateView.as_view(),
@@ -35,6 +38,7 @@ urlpatterns = [
         name="staff-delete"
     ),
     path("categories/", CategoryListView.as_view(), name="category-list"),
+    path("categories/<int:pk>/", CategoryDetailView.as_view(), name="category-detail"),
     path(
         "categories/create/",
         CategoryCreateView.as_view(),

@@ -1,0 +1,12 @@
+.index-icon {
+    transition: transform 0.3s ease;
+}
+
+.index-icon:hover {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.index-icon:active {
+  transform: scale(1.0);
+}
