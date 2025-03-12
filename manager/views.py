@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -9,6 +10,7 @@ from manager.forms import (
     StaffUsernameSearchForm,
     CategoryNameSearchForm,
     EquipmentNameSearchForm,
+    EquipmentAssignForm,
 )
 from manager.models import Staff, Equipment, Category
 
@@ -163,6 +165,47 @@ class EquipmentDetailView(generic.DetailView):
 class EquipmentCreateView(generic.CreateView):
     model = Equipment
     form_class = EquipmentForm
+
+
+class EquipmentAssignmentView(generic.UpdateView):
+    model = Equipment
+    form_class = EquipmentAssignForm
+    template_name = "manager/equipment_assign.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["instance"] = self.get_object()
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        equipment = self.get_object()
+        added_users = self.request.session.get(f"added_users_{equipment.pk}", [])
+        context["added_users"] = get_user_model().objects.filter(id__in=added_users)
+        return context
+
+    def form_valid(self, form):
+        equipment = self.get_object()
+        added_users = self.request.session.get(f"added_users_{equipment.pk}", [])
+
+        if form.cleaned_data["assigned_to"]:
+            user_id = form.cleaned_data["assigned_to"].id
+            if user_id not in added_users:
+                added_users.append(user_id)
+
+        self.request.session[f"added_users_{equipment.pk}"] = added_users
+        equipment.assigned_to.set(get_user_model().objects.filter(id__in=added_users))
+        return redirect("manager:equipment-detail", pk=equipment.pk)
+
+
+def delete_user_from_equipment(request, equipment_pk, user_id):
+    equipment = get_object_or_404(Equipment, pk=equipment_pk)
+    user = get_object_or_404(get_user_model(), pk=user_id)
+
+    if user in equipment.assigned_to.all():
+        equipment.assigned_to.remove(user)
+
+    return redirect("manager:equipment-detail", pk=equipment_pk)
 
 
 class EquipmentUpdateView(generic.UpdateView):

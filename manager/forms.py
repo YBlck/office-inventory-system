@@ -41,19 +41,38 @@ class StaffUsernameSearchForm(forms.Form):
 
 
 class EquipmentForm(forms.ModelForm):
-    assigned_to = forms.ModelMultipleChoiceField(
-        queryset=get_user_model().objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False,
-    )
-
     class Meta:
         model = Equipment
-        fields = "__all__"
+        fields = (
+            "name",
+            "category",
+            "internal_serial_number",
+            "manufacturer_serial_number"
+        )
 
     def clean_internal_serial_number(self):
         serial_number = self.cleaned_data["internal_serial_number"]
         return validate_serial_number(serial_number)
+
+
+class EquipmentAssignForm(forms.ModelForm):
+    assigned_to = forms.ModelChoiceField(
+        queryset=get_user_model().objects.all(),
+        required=False,
+        label="",
+    )
+
+    class Meta:
+        model = Equipment
+        fields = ("assigned_to",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if "instance" in kwargs and kwargs["instance"]:
+            added_users = kwargs["instance"].assigned_to.all()
+            self.fields["assigned_to"].queryset = get_user_model().objects.exclude(
+                id__in=[user.id for user in added_users]
+            )
 
 
 # validation for internal serial number of equipment
