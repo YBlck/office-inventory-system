@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from manager.models import Staff, Equipment
+from manager.models import Staff, Equipment, EquipmentEmployeeAssignment
 
 
 class StaffForm(UserCreationForm):
@@ -35,7 +35,9 @@ class StaffUsernameSearchForm(forms.Form):
         required=False,
         label="",
         widget=forms.TextInput(
-            attrs={"class": "form-control","placeholder": "Search by username"}
+            attrs={
+                "class": "form-control", "placeholder": "Search by username"
+            }
         ),
     )
 
@@ -57,22 +59,38 @@ class EquipmentForm(forms.ModelForm):
 
 class EquipmentAssignForm(forms.ModelForm):
     assigned_to = forms.ModelChoiceField(
-        queryset=get_user_model().objects.all(),
+        queryset=get_user_model().objects.none(),
         required=False,
-        label="",
+        label="Призначити співробітника",
     )
 
     class Meta:
         model = Equipment
-        fields = ("assigned_to",)
+        fields = []
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if "instance" in kwargs and kwargs["instance"]:
-            added_users = kwargs["instance"].assigned_to.all()
-            self.fields["assigned_to"].queryset = get_user_model().objects.exclude(
-                id__in=[user.id for user in added_users]
+        if self.instance:
+            assigned_users = EquipmentEmployeeAssignment.objects.filter(
+                equipment=self.instance
+            ).values_list("employee_id", flat=True)
+
+            self.fields[
+                "assigned_to"
+            ].queryset = get_user_model().objects.exclude(
+                id__in=assigned_users
             )
+
+    def save(self, commit=True):
+        equipment = self.instance
+        selected_employee = self.cleaned_data.get("assigned_to")
+
+        if commit and selected_employee:
+            EquipmentEmployeeAssignment.objects.get_or_create(
+                equipment=equipment, employee=selected_employee
+            )
+
+        return equipment
 
 
 # validation for internal serial number of equipment
