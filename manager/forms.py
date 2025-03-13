@@ -61,7 +61,7 @@ class EquipmentAssignForm(forms.ModelForm):
     assigned_to = forms.ModelChoiceField(
         queryset=get_user_model().objects.none(),
         required=False,
-        label="Призначити співробітника",
+        label="Chose employee to assign:",
     )
 
     class Meta:

@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -121,6 +122,7 @@ class CategoryCreateView(generic.CreateView):
 
 class CategoryDetailView(generic.DetailView):
     model = Category
+    queryset = Category.objects.prefetch_related("equipment__assigned_to")
 
 
 class CategoryUpdateView(generic.UpdateView):
@@ -148,7 +150,11 @@ class EquipmentListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = Equipment.objects.select_related("category")
+        queryset = Equipment.objects.select_related(
+            "category"
+        ).prefetch_related(
+            "assigned_to"
+        )
         form = EquipmentNameSearchForm(self.request.GET)
 
         if form.is_valid():
@@ -194,7 +200,8 @@ def delete_user_from_equipment(request, equipment_pk, user_id):
         id__in=[u.id for u in added_users]
     )
 
-    return redirect("manager:equipment-detail", pk=equipment_pk)
+    next_url = request.GET.get("next", "manager:index")
+    return redirect(next_url, pk=equipment_pk)
 
 
 class EquipmentUpdateView(generic.UpdateView):

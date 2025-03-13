@@ -61,17 +61,29 @@
               {% if equipment_list %}
               <table class="table">
                 <tr>
+                  <th></th>
                   <th>Name</th>
                   <th class="text-center">Serial number</th>
                   <th class="text-center">Category</th>
-                  <th class="text-right">Added at</th>
+                  <th class="text-right">Assignment</th>
                 </tr>
               {% for equipment in equipment_list %}
                 <tr>
+                  <td>{{ forloop.counter }}</td>
                   <td class="text-tertiary"><a href="{{ equipment.get_absolute_url }}">{{ equipment.name }}</a></td>
                   <td class="text-center">{{ equipment.internal_serial_number }}</td>
-                  <td class="text-center">{{ equipment.category }}</td>
-                  <td class="text-right">{{ equipment.added_at }}</td>
+                  <td class="text-center">
+                    <a class="text-tertiary" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
+                      {{ equipment.category }}
+                    </a>
+                  </td>
+                  <td class="text-right">
+                    {% if equipment.assigned_to.all %}
+                      Users assigned: {{ equipment.assigned_to.all.count }}
+                    {% else %}
+                      <span class="text-success">Not assigned</span>
+                    {% endif %}
+                  </td>
                 </tr>
               {% endfor %}
 

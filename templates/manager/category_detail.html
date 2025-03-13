@@ -61,7 +61,8 @@
                 <table class="table">
                   <tr>
                     <th>Equipment name</th>
-                    <th>Added to system</th>
+                    <th class="text-center">Added to system</th>
+                    <th class="text-right">Assignment</th>
                   </tr>
 
                   {% for item in category.equipment.all %}
@@ -70,8 +71,15 @@
                         <a class="text-tertiary"
                            href="{% url 'manager:equipment-detail' pk=item.id %}">{{ item.name }}</a>
                       </td>
-                      <td>
+                      <td class="text-center">
                         {{ item.added_at }}
+                      </td>
+                      <td class="text-right">
+                        {% if item.assigned_to.all %}
+                          Users assigned: {{ item.assigned_to.all.count }}
+                        {% else %}
+                          <span class="text-success">Not assigned</span>
+                        {% endif %}
                       </td>
                     </tr>
                   {% endfor %}

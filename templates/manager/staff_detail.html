@@ -60,26 +60,51 @@
               {% if staff.assigned_equipment.exists %}
                 <table class="table">
                   <tr>
+                    <th></th>
                     <th>Name</th>
-                    <th>Category</th>
-                    <th class="text-right">Assignment date</th>
+                    <th class="text-center">Category</th>
+                    <th class="text-center">Assignment date</th>
+                    <th></th>
                   </tr>
 
                   {% for equipment in staff.assigned_equipment.all %}
                     <tr>
+                      <td>{{ forloop.counter }}</td>
                       <td>
-                        <a class="text-tertiary"
-                           href="{% url 'manager:equipment-detail' pk=equipment.id %}">{{ equipment.name }}</a>
+                        <a class="text-tertiary" href="{% url 'manager:equipment-detail' pk=equipment.id %}">
+                          {{ equipment.name }}
+                        </a>
                       </td>
-                      <td>
-                        {{ equipment.category }}
+                      <td class="text-center">
+
+
+
+
+                        <a class="text-tertiary" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
+                          {{ equipment.category }}
+                        </a>
                       </td>
-                      <td class="text-right">
+                      <td class="text-center">
                         {% for assignment in equipment.assignments.all %}
                           {% if assignment.employee == staff %}
                             {{ assignment.assigned_at }}
                           {% endif %}
                         {% endfor %}
+                      </td>
+                      <td class="text-right">
+                        {% if user.role == "admin" or user.role == "support" %}
+                          <a  class="btn btn-outline-danger btn-sm" href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=staff.id %}?next={{ request.path }}">
+                            Delete
+                          </a>
+                        {% else %}
+                          <a href="#"  class="btn btn-outline-danger btn-sm disabled">
+                            Delete
+                          </a>
+                        {% endif %}
+
+
+
+
                       </td>
                     </tr>
                   {% endfor %}
