@@ -20,6 +20,12 @@ from manager.views import (
     CategoryDetailView,
     EquipmentAssignmentView,
     delete_user_from_equipment,
+    RepairRequestListView,
+    RepairRequestDetailView,
+    RepairRequestCreateView,
+    RepairRequestUpdateView,
+    RepairRequestDeleteView,
+    RepairRequestUserCreateView, repair_request_update_status,
 )
 
 app_name = "manager"
@@ -87,5 +93,40 @@ urlpatterns = [
     path(
         "equipment/<int:equipment_pk>/delete-user/<int:user_id>/",
         delete_user_from_equipment, name="equipment-delete-user"
+    ),
+    path(
+        "repair-request/",
+        RepairRequestListView.as_view(),
+        name="repair-request-list"
+    ),
+    path(
+        "repair-request/<int:pk>/",
+        RepairRequestDetailView.as_view(),
+        name="repair-request-detail"
+    ),
+    path(
+        "repair-request/create/",
+        RepairRequestCreateView.as_view(),
+        name="repair-request-create"
+    ),
+    path(
+        "repair-request/<int:equipment_pk>/create/<int:user_id>/",
+        RepairRequestUserCreateView.as_view(),
+        name="repair-request-user-create"
+    ),
+    path(
+        "repair-request/<int:pk>/update/",
+        RepairRequestUpdateView.as_view(),
+        name="repair-request-update"
+    ),
+    path(
+        "repair-request/<int:pk>/update-status/",
+        repair_request_update_status,
+        name="repair-request-update-status"
+    ),
+    path(
+        "repair-request/<int:pk>/delete/",
+        RepairRequestDeleteView.as_view(),
+        name="repair-request-delete"
     ),
 ]

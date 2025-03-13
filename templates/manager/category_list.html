@@ -64,6 +64,7 @@
                 <tr>
                   <th>Name</th>
                   <th>Description</th>
+                  <th class="text-center">Items</th>
                   <th></th>
                   <th></th>
                 </tr>
@@ -71,11 +72,12 @@
                   <tr>
                     <td><a class="text-tertiary" href="{% url 'manager:category-detail' pk=category.id %}">{{ category.name }}</a></td>
                     <td>{{ category.description }}</td>
+                    <td class="text-center">{{ category.equipment.count }}</td>
                     {% if user.role == "admin" or user.role == "support" %}
-                      <td class="text-right"><a href="{% url 'manager:category-update' category.id %}" class="btn btn-outline-primary btn-sm">Modify</a>
-                      <td class="text-right"><a href="{% url 'manager:category-delete' category.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                      <td class="text-right"><a href="{% url 'manager:category-update' category.id %}" class="btn btn-grow btn-outline-tertiary btn-sm">Modify</a>
+                      <td class="text-right"><a href="{% url 'manager:category-delete' category.id %}" class="btn btn-grow btn-outline-danger btn-sm">Delete</a>
                     {% else %}
-                      <td class="text-right"><a href="#" class="btn btn-outline-primary btn-sm disabled">Modify</a>
+                      <td class="text-right"><a href="#" class="btn btn-outline-tertiary btn-sm disabled">Modify</a>
                       <td class="text-right"><a href="#" class="btn btn-outline-danger btn-sm disabled">Delete</a>
                     {% endif %}
                   </tr>

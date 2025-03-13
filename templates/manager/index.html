@@ -12,10 +12,20 @@
             Gear Tracker
           </h1>
           <h2 class="lead fw-normal text-muted mb-4 px-lg-10">
-            Welcome to your simple office equipment management system.
+            Your simple office equipment management system.
           </h2>
-          <p class="text-muted">You have visited this page <strong>{{ num_visits }}</strong>
-            time{{ num_visits|pluralize }}.</p>
+          <p class="text-muted">You have visited this page <strong>{{ num_visits }}</strong> time{{ num_visits|pluralize }}.</p>
+          <div class="section-request mt-5">
+          {% if user.is_authenticated %}
+            <h5 class="mt-5 text-muted">Greetings, {{ user.first_name }} {{ user.last_name }}!</h5>
+            {% if user.role == "admin" or user.role == "support" %}
+              <h6 class="text-muted">There are {{ new_requests }} request{{ new_requests|pluralize }} in the system pending your attention.</h6>
+            {% endif %}
+          {% else %}
+            <h5 class="mt-5 text-muted">Welcome stranger!</h5>
+            <h6 class="text-muted">Please <a href="{% url 'login' %}">login</a> for full system access.</h6>
+          {% endif %}
+          </div>
         </div>
       </div>
       <figure class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2">
@@ -30,7 +40,7 @@
       <div class="container">
         <div class="row justify-content-center mb-5 mb-lg-6">
           <div class="col-6 col-md-3 text-center mb-4">
-            <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+            <div class="icon index-icon icon-shape icon-lg bg-white border-light rounded-circle mb-4">
               <a href="{% url 'manager:staff-list' %}">
                 <span class="fas fa-user text-tertiary"></span>
               </a>
@@ -39,7 +49,7 @@
             <p class="text-gray">Employees registered</p>
           </div>
           <div class="col-6 col-md-3 text-center mb-4">
-            <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+            <div class="icon index-icon icon-shape icon-lg bg-white border-light rounded-circle mb-4">
               <a href="{% url 'manager:category-list' %}">
                 <span class="fas fa-list text-tertiary"></span>
               </a>
@@ -48,7 +58,7 @@
             <p class="text-gray">Total categories</p>
           </div>
           <div class="col-6 col-md-3 text-center">
-            <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+            <div class="icon index-icon icon-shape icon-lg bg-white border-light rounded-circle mb-4">
               <a href="{% url 'manager:equipment-list' %}">
                 <span class="fas fa-desktop text-tertiary"></span>
               </a>
@@ -57,10 +67,12 @@
             <p class="text-gray">Number of equipment</p>
           </div>
           <div class="col-6 col-md-3 text-center">
-            <div class="icon index-icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
-              <span class="fas fa-wrench text-tertiary"></span>
+            <div class="icon index-icon icon-shape icon-lg bg-white rounded-circle mb-4">
+              <a href="{% url 'manager:repair-request-list' %}">
+                <span class="fas fa-wrench text-tertiary"></span>
+              </a>
             </div>
-            <h3 class="fw-bolder">0</h3>
+            <h3 class="fw-bolder">{{ num_requests }}</h3>
             <p class="text-gray">Support request</p>
           </div>
         </div>

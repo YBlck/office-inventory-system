@@ -64,6 +64,7 @@
                     <th>Name</th>
                     <th class="text-center">Category</th>
                     <th class="text-center">Assignment date</th>
+                    <th class="text-center">Support</th>
                     <th></th>
                   </tr>
 
@@ -77,9 +78,6 @@
                       </td>
                       <td class="text-center">
 
-
-
-
                         <a class="text-tertiary" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
                           {{ equipment.category }}
                         </a>
@@ -91,9 +89,43 @@
                           {% endif %}
                         {% endfor %}
                       </td>
+                      <td class="text-center">
+                        {% with equipment.repair_requests.last as latest_request %}
+                          {% if user.role == "admin" or user.role == "support" or user == staff %}
+                            {% if latest_request %}
+                              {% if latest_request.status == "completed" %}
+                                <a class="btn btn-grow btn-outline-success btn-sm" href="{% url 'manager:repair-request-delete' pk=latest_request.id %}?next={{ request.path }}">
+                                  {{ latest_request.get_status_display }}
+                                </a>
+                              {% else %}
+                                <a class="btn btn-outline-gray btn-sm disabled"
+                                   href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                  {{ latest_request.get_status_display }}
+                                </a>
+                              {% endif %}
+                            {% else %}
+                              <a class="btn btn-grow btn-outline-info btn-sm"
+                                 href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                Request
+                              </a>
+                            {% endif %}
+                          {% else %}
+                            {% if latest_request %}
+                              <a class="btn btn-outline-gray btn-sm disabled" href="#">
+                                {{ latest_request.get_status_display }}
+                              </a>
+                            {% else %}
+                              <a class="btn btn-outline-info btn-sm disabled" href="#">
+                                Request
+                              </a>
+                            {% endif %}
+                          {% endif %}
+                        {% endwith %}
+                      </td>
+
                       <td class="text-right">
                         {% if user.role == "admin" or user.role == "support" %}
-                          <a  class="btn btn-outline-danger btn-sm" href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=staff.id %}?next={{ request.path }}">
+                          <a  class="btn btn-grow btn-outline-danger btn-sm" href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=staff.id %}?next={{ request.path }}">
                             Delete
                           </a>
                         {% else %}
@@ -101,10 +133,6 @@
                             Delete
                           </a>
                         {% endif %}
-
-
-
-
                       </td>
                     </tr>
                   {% endfor %}

@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
-from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from manager.forms import (
@@ -12,8 +13,10 @@ from manager.forms import (
     CategoryNameSearchForm,
     EquipmentNameSearchForm,
     EquipmentAssignForm,
+    RepairRequestSearchForm,
+    RepairRequestForm,
 )
-from manager.models import Staff, Equipment, Category
+from manager.models import Staff, Equipment, Category, RepairRequest
 
 
 def index(request):
@@ -22,6 +25,8 @@ def index(request):
     num_staff = Staff.objects.count()
     num_equipment = Equipment.objects.count()
     num_categories = Category.objects.count()
+    num_requests = RepairRequest.objects.count()
+    new_requests = RepairRequest.objects.filter(status="pending").count()
 
     num_visits = request.session.get("num_visits", 0)
     request.session["num_visits"] = num_visits + 1
@@ -30,7 +35,9 @@ def index(request):
         "num_staff": num_staff,
         "num_equipment": num_equipment,
         "num_categories": num_categories,
+        "num_requests": num_requests,
         "num_visits": num_visits + 1,
+        "new_requests": new_requests,
     }
 
     return render(request, "manager/index.html", context=context)
@@ -104,7 +111,7 @@ class CategoryListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().prefetch_related("equipment")
         form = CategoryNameSearchForm(self.request.GET)
 
         if form.is_valid():
@@ -212,3 +219,89 @@ class EquipmentUpdateView(generic.UpdateView):
 class EquipmentDeleteView(generic.DeleteView):
     model = Equipment
     success_url = reverse_lazy("manager:equipment-list")
+
+
+class RepairRequestListView(generic.ListView):
+    model = RepairRequest
+    paginate_by = 10
+    template_name = "manager/repair_request_list.html"
+    context_object_name = "repair_request_list"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(RepairRequestListView, self).get_context_data(**kwargs)
+        equipment = self.request.GET.get("equipment", "")
+
+        context["search_form"] = RepairRequestSearchForm(
+            initial={"equipment": equipment}
+        )
+        return context
+
+
+    def get_queryset(self):
+        queryset = RepairRequest.objects.all()
+        form = RepairRequestSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                equipment__name__icontains=form.cleaned_data["equipment"].strip()
+            )
+        return queryset
+
+
+class RepairRequestDetailView(generic.DetailView):
+    model = RepairRequest
+    template_name = "manager/repair_request_detail.html"
+    context_object_name = "repair_request"
+
+
+class RepairRequestCreateView(generic.CreateView):
+    model = RepairRequest
+    template_name = "manager/repair_request_form.html"
+    fields = ("equipment", "employee", "description")
+    success_url = reverse_lazy("manager:repair-request-list")
+
+
+class RepairRequestUserCreateView(generic.CreateView):
+    model = RepairRequest
+    template_name = "manager/repair_request_form.html"
+    form_class = RepairRequestForm
+    success_url = reverse_lazy("manager:repair-request-list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["equipment"] = get_object_or_404(Equipment, pk=self.kwargs["equipment_pk"])
+        kwargs["user"] = get_object_or_404(Staff, pk=self.kwargs["user_id"])
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.equipment = get_object_or_404(Equipment, pk=self.kwargs["equipment_pk"])
+        form.instance.employee = get_object_or_404(Staff, pk=self.kwargs["user_id"])
+        return super().form_valid(form)
+
+
+class RepairRequestUpdateView(generic.UpdateView):
+    model = RepairRequest
+    template_name = "manager/repair_request_form.html"
+    fields = ("description", "status")
+
+
+class RepairRequestDeleteView(generic.DeleteView):
+    model = RepairRequest
+    template_name = "manager/repair_request_confirm_delete.html"
+
+    def get_success_url(self):
+        next_url = self.request.GET.get("next", reverse_lazy("manager:repair-request-list"))
+        return next_url
+
+
+def repair_request_update_status(request, pk):
+    repair_request = get_object_or_404(RepairRequest, pk=pk)
+
+    if repair_request.status == "in_progress":
+        repair_request.status = "completed"
+        repair_request.date_completed = datetime.now()
+    elif repair_request.status == "pending":
+        repair_request.status = "in_progress"
+
+    repair_request.save()
+    return redirect(reverse("manager:repair-request-list"))

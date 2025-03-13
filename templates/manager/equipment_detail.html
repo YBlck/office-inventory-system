@@ -99,7 +99,7 @@
                       </td>
                       <td class="text-right">
                         {% if user.role == "admin" or user.role == "support" %}
-                          <a class="btn btn-outline-danger btn-sm" href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=employee.id%}?next={{ request.path }}">
+                          <a class="btn btn-grow btn-outline-danger btn-sm" href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=employee.id%}?next={{ request.path }}">
                             Delete
                           </a>
                         {% else %}

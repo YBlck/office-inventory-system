@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %} UI Cards {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <main>
+
+    <!-- Hero -->
+    <div class="section pb-2 bg-primary text-white">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 text-center">
+            <h1 class="display-3 mb-4">Support request list</h1>
+            <figure class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2">
+              <svg class="fill-white"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 185.4">
+                <path d="M3000,0v185.4H0V0c496.4,115.6,996.4,173.4,1500,173.4S2503.6,115.6,3000,0z"></path>
+              </svg>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of Hero -->
+
+    <div class="mt-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12">
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="col-5">
+                <form action="" method="get" class="form-inline">
+                  <div class="mb-1">
+                    <div class="input-group">
+                      {{ search_form.equipment }}
+                      <button class="input-group-text" type="submit">
+                        <span class="fas fa-search"></span>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              {% if user.role == "admin" or user.role == "support" %}
+                <a href="{% url 'manager:repair-request-create' %}" class="btn btn-outline-primary btn-icon-only">
+                  <span aria-hidden="true" class="fas fa-plus"></span>
+                </a>
+              {% else %}
+                <a href="#" class="btn btn-outline-primary btn-icon-only disabled" disabled>
+                  <span aria-hidden="true" class="fas fa-plus"></span>
+                </a>
+              {% endif %}
+            </div>
+
+            <div class="mb-5">
+              {% if repair_request_list %}
+              <table class="table">
+                <tr>
+                  <th></th>
+                  <th>Equipment</th>
+                  <th class="text-center">Detail</th>
+                  <th class="text-center">Reported by</th>
+                  <th class="text-center">Reported/Completed</th>
+                  <th class="text-right">Status</th>
+                </tr>
+              {% for request in repair_request_list %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td class="text-tertiary">
+                    <a href="{% url 'manager:equipment-detail' pk=request.equipment.id %}">
+                      {{ request.equipment.name }}
+                    </a>
+                  </td>
+                  <td class="text-center">
+                    <a class="btn btn-grow btn-outline-info btn-sm" href="{{ request.get_absolute_url }}">
+                      More
+                    </a>
+                  </td>
+                  <td class="text-center text-tertiary">
+                    <a href="{% url 'manager:staff-detail' pk=request.employee.id %}">
+                      {{ request.employee.username }}
+                    </a>
+                  </td>
+                  <td class="text-center">
+                    {% if request.date_completed %}
+                      {{ request.date_completed|date:"d M Y" }}
+                    {% else %}
+                      {{ request.date_reported|date:"d M Y" }}
+                    {% endif %}
+                  </td>
+                  <td class="text-right">
+                    {% if user.role == "admin" or user.role == "support" %}
+                      {% if request.status == "completed" %}
+                        <a class="btn btn-outline-dark btn-sm disabled" href="#">
+                          {{ request.get_status_display }}
+                        </a>
+                      {% else %}
+                        <a class="btn btn-grow btn-outline-info btn-sm" href="{% url 'manager:repair-request-update-status' pk=request.id %}">
+                          {{ request.get_status_display }}
+                        </a>
+                      {% endif %}
+                    {% else %}
+                      <a class="btn btn-outline-dark btn-sm disabled" href="#">
+                        {{ request.get_status_display }}
+                      </a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+
+              </table>
+              {% else %}
+                <p>There are no repair requests in the system.</p>
+              {% endif %}
+                {% include "includes/pagination.html" %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

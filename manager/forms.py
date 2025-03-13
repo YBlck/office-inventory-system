@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from manager.models import Staff, Equipment, EquipmentEmployeeAssignment
+from manager.models import Staff, Equipment, EquipmentEmployeeAssignment, RepairRequest
 
 
 class StaffForm(UserCreationForm):
@@ -125,3 +125,30 @@ class CategoryNameSearchForm(forms.Form):
             attrs={"class": "form-control", "placeholder": "Search by name"}
         ),
     )
+
+
+class RepairRequestSearchForm(forms.Form):
+    equipment = forms.CharField(
+        max_length=50,
+        required=False,
+        label="",
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Search by equipment"}
+        ),
+    )
+
+
+class RepairRequestForm(forms.ModelForm):
+    class Meta:
+        model = RepairRequest
+        fields = ("description",)
+
+    def __init__(self, *args, **kwargs):
+        # Отримуємо equipment та user з kwargs
+        self.equipment = kwargs.pop("equipment", None)
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+    #
+    #     # Можна використати equipment та user для кастомізації форми
+    #     if self.equipment:
+    #         self.fields["description"].help_text = f"Creating repair request for {self.equipment.name}."

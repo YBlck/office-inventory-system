@@ -51,9 +51,7 @@ class Equipment(models.Model):
         on_delete=models.CASCADE,
         related_name="equipment",
     )
-    manufacturer_serial_number = models.CharField(
-        max_length=100, blank=True, null=True
-    )
+    manufacturer_serial_number = models.CharField(max_length=100, blank=True, null=True)
     internal_serial_number = models.CharField(max_length=10, unique=True)
     added_at = models.DateTimeField(auto_now_add=True)
     assigned_to = models.ManyToManyField(
@@ -77,9 +75,7 @@ class Equipment(models.Model):
 
 class EquipmentEmployeeAssignment(models.Model):
     equipment = models.ForeignKey(
-        Equipment,
-        on_delete=models.CASCADE,
-        related_name="assignments"
+        Equipment, on_delete=models.CASCADE, related_name="assignments"
     )
     employee = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -90,3 +86,32 @@ class EquipmentEmployeeAssignment(models.Model):
 
     class Meta:
         ordering = ["employee"]
+
+
+class RepairRequest(models.Model):
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("in_progress", "In progress"),
+        ("completed", "Completed"),
+    ]
+
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name="repair_requests")
+    employee = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="repair_requests"
+    )
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="pending")
+    description = models.TextField(blank=True, null=True)
+    date_reported = models.DateTimeField(auto_now_add=True)
+    date_completed = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-date_reported"]
+
+    def __str__(self):
+        return f"{self.equipment} - {self.employee}"
+
+    def get_absolute_url(self):
+        return reverse("manager:repair-request-detail", kwargs={"pk": self.pk})
+
+    def get_status_display(self):
+        return dict(RepairRequest.STATUS_CHOICES)[self.status]
