@@ -83,7 +83,7 @@ class StaffCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = StaffForm
 
 
-class StaffRegisterView(LoginRequiredMixin, generic.CreateView):
+class StaffRegisterView(generic.CreateView):
     model = Staff
     form_class = StaffForm
     template_name = "registration/register.html"
