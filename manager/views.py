@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
@@ -43,7 +45,7 @@ def index(request):
     return render(request, "manager/index.html", context=context)
 
 
-class StaffListView(generic.ListView):
+class StaffListView(LoginRequiredMixin, generic.ListView):
     model = Staff
     paginate_by = 10
 
@@ -67,7 +69,7 @@ class StaffListView(generic.ListView):
         return queryset
 
 
-class StaffDetailView(generic.DetailView):
+class StaffDetailView(LoginRequiredMixin, generic.DetailView):
     model = Staff
     queryset = Staff.objects.prefetch_related(
         "assigned_equipment__assignments__employee"
@@ -76,28 +78,28 @@ class StaffDetailView(generic.DetailView):
     )
 
 
-class StaffCreateView(generic.CreateView):
+class StaffCreateView(LoginRequiredMixin, generic.CreateView):
     model = Staff
     form_class = StaffForm
 
 
-class StaffRegisterView(generic.CreateView):
+class StaffRegisterView(LoginRequiredMixin, generic.CreateView):
     model = Staff
     form_class = StaffForm
     template_name = "registration/register.html"
 
 
-class StaffUpdateView(generic.UpdateView):
+class StaffUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Staff
     form_class = StaffUpdateForm
 
 
-class StaffDeleteView(generic.DeleteView):
+class StaffDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Staff
     success_url = reverse_lazy("manager:staff-list")
 
 
-class CategoryListView(generic.ListView):
+class CategoryListView(LoginRequiredMixin, generic.ListView):
     model = Category
     paginate_by = 8
 
@@ -121,29 +123,29 @@ class CategoryListView(generic.ListView):
         return queryset
 
 
-class CategoryCreateView(generic.CreateView):
+class CategoryCreateView(LoginRequiredMixin, generic.CreateView):
     model = Category
     fields = "__all__"
     success_url = reverse_lazy("manager:category-list")
 
 
-class CategoryDetailView(generic.DetailView):
+class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
     model = Category
     queryset = Category.objects.prefetch_related("equipment__assigned_to")
 
 
-class CategoryUpdateView(generic.UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Category
     fields = "__all__"
     success_url = reverse_lazy("manager:category-list")
 
 
-class CategoryDeleteView(generic.DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Category
     success_url = reverse_lazy("manager:category-list")
 
 
-class EquipmentListView(generic.ListView):
+class EquipmentListView(LoginRequiredMixin, generic.ListView):
     model = Equipment
     paginate_by = 10
 
@@ -171,17 +173,17 @@ class EquipmentListView(generic.ListView):
         return queryset
 
 
-class EquipmentDetailView(generic.DetailView):
+class EquipmentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Equipment
     queryset = Equipment.objects.prefetch_related("assignments__employee")
 
 
-class EquipmentCreateView(generic.CreateView):
+class EquipmentCreateView(LoginRequiredMixin, generic.CreateView):
     model = Equipment
     form_class = EquipmentForm
 
 
-class EquipmentAssignmentView(generic.UpdateView):
+class EquipmentAssignmentView(LoginRequiredMixin, generic.UpdateView):
     model = Equipment
     form_class = EquipmentAssignForm
     template_name = "manager/equipment_assign.html"
@@ -193,6 +195,7 @@ class EquipmentAssignmentView(generic.UpdateView):
         )
 
 
+@login_required
 def delete_user_from_equipment(request, equipment_pk, user_id):
     equipment = get_object_or_404(Equipment, pk=equipment_pk)
     user = get_object_or_404(get_user_model(), pk=user_id)
@@ -211,17 +214,17 @@ def delete_user_from_equipment(request, equipment_pk, user_id):
     return redirect(next_url, pk=equipment_pk)
 
 
-class EquipmentUpdateView(generic.UpdateView):
+class EquipmentUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Equipment
     form_class = EquipmentForm
 
 
-class EquipmentDeleteView(generic.DeleteView):
+class EquipmentDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Equipment
     success_url = reverse_lazy("manager:equipment-list")
 
 
-class RepairRequestListView(generic.ListView):
+class RepairRequestListView(LoginRequiredMixin, generic.ListView):
     model = RepairRequest
     paginate_by = 10
     template_name = "manager/repair_request_list.html"
@@ -237,30 +240,34 @@ class RepairRequestListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        queryset = RepairRequest.objects.select_related("employee", "equipment")
+        queryset = RepairRequest.objects.select_related(
+            "employee", "equipment"
+        )
         form = RepairRequestSearchForm(self.request.GET)
 
         if form.is_valid():
             return queryset.filter(
-                equipment__name__icontains=form.cleaned_data["equipment"].strip()
+                equipment__name__icontains=form.cleaned_data[
+                    "equipment"
+                ].strip()
             )
         return queryset
 
 
-class RepairRequestDetailView(generic.DetailView):
+class RepairRequestDetailView(LoginRequiredMixin, generic.DetailView):
     model = RepairRequest
     template_name = "manager/repair_request_detail.html"
     context_object_name = "repair_request"
 
 
-class RepairRequestCreateView(generic.CreateView):
+class RepairRequestCreateView(LoginRequiredMixin, generic.CreateView):
     model = RepairRequest
     template_name = "manager/repair_request_form.html"
     fields = ("equipment", "employee", "description")
     success_url = reverse_lazy("manager:repair-request-list")
 
 
-class RepairRequestUserCreateView(generic.CreateView):
+class RepairRequestUserCreateView(LoginRequiredMixin, generic.CreateView):
     model = RepairRequest
     template_name = "manager/repair_request_form.html"
     form_class = RepairRequestForm
@@ -268,31 +275,40 @@ class RepairRequestUserCreateView(generic.CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["equipment"] = get_object_or_404(Equipment, pk=self.kwargs["equipment_pk"])
+        kwargs["equipment"] = get_object_or_404(
+            Equipment, pk=self.kwargs["equipment_pk"]
+        )
         kwargs["user"] = get_object_or_404(Staff, pk=self.kwargs["user_id"])
         return kwargs
 
     def form_valid(self, form):
-        form.instance.equipment = get_object_or_404(Equipment, pk=self.kwargs["equipment_pk"])
-        form.instance.employee = get_object_or_404(Staff, pk=self.kwargs["user_id"])
+        form.instance.equipment = get_object_or_404(
+            Equipment, pk=self.kwargs["equipment_pk"]
+        )
+        form.instance.employee = get_object_or_404(
+            Staff, pk=self.kwargs["user_id"]
+        )
         return super().form_valid(form)
 
 
-class RepairRequestUpdateView(generic.UpdateView):
+class RepairRequestUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = RepairRequest
     template_name = "manager/repair_request_form.html"
     fields = ("description", "status")
 
 
-class RepairRequestDeleteView(generic.DeleteView):
+class RepairRequestDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = RepairRequest
     template_name = "manager/repair_request_confirm_delete.html"
 
     def get_success_url(self):
-        next_url = self.request.GET.get("next", reverse_lazy("manager:repair-request-list"))
+        next_url = self.request.GET.get(
+            "next", reverse_lazy("manager:repair-request-list")
+        )
         return next_url
 
 
+@login_required
 def repair_request_update_status(request, pk):
     repair_request = get_object_or_404(RepairRequest, pk=pk)
 

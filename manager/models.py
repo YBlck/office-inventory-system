@@ -51,7 +51,9 @@ class Equipment(models.Model):
         on_delete=models.CASCADE,
         related_name="equipment",
     )
-    manufacturer_serial_number = models.CharField(max_length=100, blank=True, null=True)
+    manufacturer_serial_number = models.CharField(
+        max_length=100, blank=True, null=True
+    )
     internal_serial_number = models.CharField(max_length=10, unique=True)
     added_at = models.DateTimeField(auto_now_add=True)
     assigned_to = models.ManyToManyField(
@@ -95,11 +97,19 @@ class RepairRequest(models.Model):
         ("completed", "Completed"),
     ]
 
-    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name="repair_requests")
+    equipment = models.ForeignKey(
+        Equipment,
+        on_delete=models.CASCADE,
+        related_name="repair_requests")
     employee = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="repair_requests"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="repair_requests"
     )
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(
+        max_length=50, choices=STATUS_CHOICES, default="pending"
+    )
     description = models.TextField(blank=True, null=True)
     date_reported = models.DateTimeField(auto_now_add=True)
     date_completed = models.DateTimeField(null=True, blank=True)
