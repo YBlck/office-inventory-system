@@ -19,7 +19,9 @@
           {% if user.is_authenticated %}
             <h5 class="mt-5 text-muted">Greetings, {{ user.first_name }} {{ user.last_name }}!</h5>
             {% if user.role == "admin" or user.role == "support" %}
-              <h6 class="text-muted">{{ new_requests }} new support request{{ new_requests|pluralize }} pending attention in the system.</h6>
+              {% if new_requests %}
+                <h6 class="text-muted">{{ new_requests }} new support request{{ new_requests|pluralize }} pending attention in the system.</h6>
+              {% endif %}
             {% endif %}
           {% else %}
             <h5 class="mt-5 text-muted">Welcome stranger!</h5>
