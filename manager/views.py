@@ -236,9 +236,8 @@ class RepairRequestListView(generic.ListView):
         )
         return context
 
-
     def get_queryset(self):
-        queryset = RepairRequest.objects.all()
+        queryset = RepairRequest.objects.select_related("employee", "equipment")
         form = RepairRequestSearchForm(self.request.GET)
 
         if form.is_valid():
