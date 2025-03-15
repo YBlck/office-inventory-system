@@ -101,3 +101,8 @@
   left: 50%;
   transform: translate(-50%, -60%);
 }
+
+.gear-bg {
+  background: url("../img/blue-bg.jpg");
+  background-size: cover;
+}
