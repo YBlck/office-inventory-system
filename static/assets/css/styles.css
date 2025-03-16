@@ -1,0 +1,122 @@
+.index-icon {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+  box-shadow: 0 10px 10px 4px rgba(0, 0, 0, 0.1);
+}
+
+.index-icon:hover {
+  cursor: pointer;
+  box-shadow: 0 10px 10px 4px rgba(29, 87, 164, 0.2);
+}
+
+.index-icon:active {
+  box-shadow: 0 10px 10px 4px rgba(12, 151, 225, 0.2);
+}
+
+.icon-delete:hover {
+    color: red;
+}
+
+.Btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 50px;
+  height: 50px;
+  border: solid 1px white;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.menu-icon {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1.2);
+  color: white;
+}
+
+.menu-icon:hover {
+  display: none;
+}
+
+.menu-button-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 100%;
+  opacity: 0;
+  color: black;
+  transition-duration: .3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.Btn:hover {
+  width: 125px;
+  border-radius: 40px;
+  transition-duration: .3s;
+  background-color: white;
+}
+
+.Btn:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 20px;
+}
+
+.Btn:hover .menu-button-text {
+  opacity: 1;
+  width: 100%;
+  transition-duration: .3s;
+}
+
+.Btn:active {
+  transform: translate(2px ,2px);
+}
+
+.btn-grow:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.btn-grow:active {
+  transform: scale(0.95);
+}
+
+.section-request {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -60%);
+}
+
+.gear-bg {
+  background: url("../img/blue-bg.jpg");
+  background-size: cover;
+}
+
+.font-title {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.rotate {
+  display: inline-block;
+  transition: transform 0.3s ease-in-out;
+}
+
+.rotate:hover {
+  transform: rotate(180deg);
+}

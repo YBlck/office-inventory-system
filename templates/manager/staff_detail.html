@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <main>
+
+    <!-- Hero -->
+    <div class="section pb-5 gear-bg text-white">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 text-center">
+            <h1 class="mt-2">
+              User: {{ staff.username }}
+            </h1>
+
+{#            <figure class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2">#}
+{#              <svg class="fill-white"#}
+{#                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 185.4">#}
+{#                <path d="M3000,0v185.4H0V0c496.4,115.6,996.4,173.4,1500,173.4S2503.6,115.6,3000,0z"></path>#}
+{#              </svg>#}
+{#            </figure>#}
+            <div class="mt-3">
+              <p><strong>First name:</strong> {{ staff.first_name }}</p>
+              <p><strong>Last name:</strong> {{ staff.last_name }}</p>
+              <p><strong>Role:</strong> {{ staff.get_role_display }}</p>
+            </div>
+
+            {% if user.role == "admin" or user == staff %}
+              <div class="mt-4">
+                <a href="{% url 'manager:staff-update' pk=staff.id %}" class="btn btn-outline-warning">
+                  Update
+                </a>
+
+                <a href="{% url 'manager:staff-delete' pk=staff.id %}" class="btn btn-outline-danger">
+                  Delete
+                </a>
+              </div>
+            {% else %}
+              <div class="mt-4">
+                <a href="#" class="btn btn-outline-warning disabled">
+                  Update
+                </a>
+
+                <a href="#" class="btn btn-outline-danger disabled">
+                  Delete
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of Hero -->
+
+    <div class="mt-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-12">
+            <div class="mb-5">
+              <div class="">
+                <button style="position: absolute;" class="btn btn-outline-primary btn-icon-only" onclick="window.history.back();">
+                  <span class="fas fa-arrow-left"></span>
+                </button>
+                <h3 class="text-center">Equipment in use:</h3>
+              </div>
+              {% if staff.assigned_equipment.exists %}
+                <table class="table">
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th class="text-center">Category</th>
+                    <th class="text-center">Assignment date</th>
+                    <th class="text-center">Support</th>
+                    <th></th>
+                  </tr>
+
+                  {% for equipment in staff.assigned_equipment.all %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>
+                        <a class="text-tertiary" href="{% url 'manager:equipment-detail' pk=equipment.id %}">
+                          {{ equipment.name }}
+                        </a>
+                      </td>
+                      <td class="text-center">
+
+                        <a class="text-tertiary" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
+                          {{ equipment.category }}
+                        </a>
+                      </td>
+                      <td class="text-center">
+                        {% for assignment in equipment.assignments.all %}
+                          {% if assignment.employee == staff %}
+                            {{ assignment.assigned_at }}
+                          {% endif %}
+                        {% endfor %}
+                      </td>
+                      <td class="text-center">
+                        {% with equipment.repair_requests.last as latest_request %}
+                          {% if user.role == "admin" or user.role == "support" or user == staff %}
+                            {% if latest_request %}
+                              {% if latest_request.status == "completed" %}
+                                <a class="btn btn-grow btn-outline-success btn-sm" href="{% url 'manager:repair-request-delete' pk=latest_request.id %}?next={{ request.path }}">
+                                  {{ latest_request.get_status_display }}
+                                </a>
+                              {% else %}
+                                <a class="btn btn-outline-gray btn-sm disabled"
+                                   href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                  {{ latest_request.get_status_display }}
+                                </a>
+                              {% endif %}
+                            {% else %}
+                              <a class="btn btn-grow btn-outline-info btn-sm"
+                                 href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                Request
+                              </a>
+                            {% endif %}
+                          {% else %}
+                            {% if latest_request %}
+                              <a class="btn btn-outline-gray btn-sm disabled" href="#">
+                                {{ latest_request.get_status_display }}
+                              </a>
+                            {% else %}
+                              <a class="btn btn-outline-info btn-sm disabled" href="#">
+                                Request
+                              </a>
+                            {% endif %}
+                          {% endif %}
+                        {% endwith %}
+                      </td>
+
+                      <td class="text-right">
+                        {% if user.role == "admin" or user.role == "support" %}
+                          <a  class="btn btn-grow btn-outline-danger btn-sm" href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=staff.id %}?next={{ request.path }}">
+                            Delete
+                          </a>
+                        {% else %}
+                          <a href="#"  class="btn btn-outline-danger btn-sm disabled">
+                            Delete
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </table>
+              {% else %}
+                <p class="text-center">No equipment assigned yet.</p>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+{% endblock %}

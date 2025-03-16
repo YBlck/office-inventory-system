@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <!-- Primary Meta Tags -->
+  <title>
+    Gear Tracker
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Fontawesome -->
+  <link type="text/css" href="{{ ASSETS_ROOT }}/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <!-- Pixel CSS -->
+  <link type="text/css" href="{{ ASSETS_ROOT }}/css/pixel.css" rel="stylesheet">
+  <!-- Add additional CSS in static file -->
+  <link type="text/css" href="{{ ASSETS_ROOT }}/css/styles.css" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+  <!-- favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ ASSETS_ROOT }}/img/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ ASSETS_ROOT }}/img/favicon/favicon-16x16.png">
+</head>
+<body>
+
+{% block navigation %}
+  {% include 'includes/navigation.html' %}
+{% endblock %}
+
+{% block content %}{% endblock content %}
+
+{% include 'includes/scripts.html' %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
+
+</body>
+</html>
