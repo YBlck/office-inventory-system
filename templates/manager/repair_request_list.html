@@ -74,8 +74,8 @@
               {% for request in repair_request_list %}
                 <tr>
                   <td>{{ forloop.counter }}</td>
-                  <td class="text-tertiary">
-                    <a href="{% url 'manager:equipment-detail' pk=request.equipment.id %}">
+                  <td>
+                    <a class="text-tertiary underline" href="{% url 'manager:equipment-detail' pk=request.equipment.id %}">
                       {{ request.equipment.name }}
                     </a>
                   </td>
@@ -84,8 +84,8 @@
                       More
                     </a>
                   </td>
-                  <td class="text-center text-tertiary">
-                    <a href="{% url 'manager:staff-detail' pk=request.employee.id %}">
+                  <td class="text-center">
+                    <a class="text-tertiary underline" href="{% url 'manager:staff-detail' pk=request.employee.id %}">
                       {{ request.employee.username }}
                     </a>
                   </td>
