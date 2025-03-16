@@ -2,14 +2,17 @@
   <nav id="navbar-main" class="navbar navbar-main navbar-theme-primary headroom navbar-dark">
     <div class="container position-relative" style="display: flex; justify-content: space-between;">
       <div style="display: flex;">
-        <a class="me-lg-5" href="{% url 'manager:index' %}">
-{#          <img class="navbar-brand-dark" src="{{ ASSETS_ROOT }}/img/brand/light.svg" alt="Logo light">#}
-{#          <img class="navbar-brand-light" src="{{ ASSETS_ROOT }}/img/brand/dark.svg" alt="Logo dark">#}
+        <a class="me-lg-5 rotate" href="{% url 'manager:index' %}">
+{#          <svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">#}
+{#            <path d="M50 15a35 35 0 1 0 24.75 59.75l-7.07-7.07A25 25 0 1 1 75 50h-15"#}
+{#                  stroke="white" stroke-width="5" fill="none" stroke-linecap="round"></path>#}
+{#          </svg>#}
           <svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 15a35 35 0 1 0 24.75 59.75l-7.07-7.07A25 25 0 1 1 75 50h-15"
-                  stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <g transform="scale(-1, 1) translate(-100, 0)">
+              <path d="M50 15a35 35 0 1 0 24.75 59.75l-7.07-7.07A25 25 0 1 1 75 50h-15"
+                    stroke="white" stroke-width="5" fill="none" stroke-linecap="round"></path>
+            </g>
           </svg>
-
         </a>
 
 
