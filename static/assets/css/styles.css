@@ -9,9 +9,8 @@
   box-shadow: 0 10px 10px 4px rgba(29, 87, 164, 0.2);
 }
 
-
 .index-icon:active {
-  transform: scale(1.1);
+  box-shadow: 0 10px 10px 4px rgba(12, 151, 225, 0.2);
 }
 
 .icon-delete:hover {
@@ -105,7 +104,6 @@
   background: url("../img/blue-bg.jpg");
   background-size: cover;
 }
-
 
 .font-title {
   font-family: "Orbitron", sans-serif;

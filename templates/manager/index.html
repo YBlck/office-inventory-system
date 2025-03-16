@@ -20,7 +20,7 @@
             <h5 class="mt-5 text-muted">Greetings, {{ user.first_name }} {{ user.last_name }}!</h5>
             {% if user.role == "admin" or user.role == "support" %}
               {% if new_requests %}
-                <h6 class="text-muted">{{ new_requests }} new support request{{ new_requests|pluralize }} pending attention in the system.</h6>
+                <h6 class="text-muted"><span class="counter" data-value="{{ new_requests }}">0</span> new support request{{ new_requests|pluralize }} pending attention in the system.</h6>
               {% endif %}
             {% endif %}
           {% else %}
@@ -47,7 +47,7 @@
                 <span class="fas fa-user text-tertiary"></span>
               </a>
             </div>
-            <h3 class="fw-bolder">{{ num_staff }}</h3>
+            <h3 class="fw-bolder counter" data-value="{{ num_staff }}">0</h3>
             <p class="text-gray">Employees registered</p>
           </div>
           <div class="col-6 col-md-3 text-center mb-4">
@@ -56,7 +56,7 @@
                 <span class="fas fa-list text-tertiary"></span>
               </a>
             </div>
-            <h3 class="fw-bolder">{{ num_categories }}</h3>
+            <h3 class="fw-bolder counter" data-value="{{ num_categories }}">0</h3>
             <p class="text-gray">Total categories</p>
           </div>
           <div class="col-6 col-md-3 text-center">
@@ -65,7 +65,7 @@
                 <span class="fas fa-desktop text-tertiary"></span>
               </a>
             </div>
-            <h3 class="fw-bolder">{{ num_equipment }}</h3>
+            <h3 class="fw-bolder counter" data-value="{{ num_equipment }}">0</h3>
             <p class="text-gray">Number of equipment</p>
           </div>
           <div class="col-6 col-md-3 text-center">
@@ -74,7 +74,7 @@
                 <span class="fas fa-wrench text-tertiary"></span>
               </a>
             </div>
-            <h3 class="fw-bolder">{{ num_requests }}</h3>
+            <h3 class="fw-bolder counter" data-value="{{ num_requests }}">0</h3>
             <p class="text-gray">Support request</p>
           </div>
         </div>
