@@ -189,6 +189,10 @@
   .rotate {
     transform: rotate(180deg);
   }
+
+  .mob-hide{
+    display: none;
+  }
 }
 
 .navbar {
