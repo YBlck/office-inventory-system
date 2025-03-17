@@ -6,7 +6,7 @@ from manager.models import (
     Staff,
     Equipment,
     Category,
-    EquipmentEmployeeAssignment
+    EquipmentEmployeeAssignment, RepairRequest
 )
 
 admin.site.unregister(Group)
@@ -53,3 +53,14 @@ class EquipmentAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name", "description",)
+
+
+@admin.register(RepairRequest)
+class RepairRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        "equipment",
+        "employee",
+        "status",
+        "date_reported",
+        "date_completed"
+    )

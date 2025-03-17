@@ -73,10 +73,10 @@
               {% for equipment in equipment_list %}
                 <tr>
                   <td>{{ forloop.counter }}</td>
-                  <td class="text-tertiary"><a href="{{ equipment.get_absolute_url }}">{{ equipment.name }}</a></td>
+                  <td><a class="text-tertiary underline" href="{{ equipment.get_absolute_url }}">{{ equipment.name }}</a></td>
                   <td class="text-center">{{ equipment.internal_serial_number }}</td>
                   <td class="text-center">
-                    <a class="text-tertiary" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
+                    <a class="text-tertiary underline" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
                       {{ equipment.category }}
                     </a>
                   </td>

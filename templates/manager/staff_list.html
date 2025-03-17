@@ -72,7 +72,7 @@
               {% for employee in staff_list %}
                 <tr>
                   <td>{{ forloop.counter }}</td>
-                  <td class="text-tertiary"><a href="{{ employee.get_absolute_url }}">{{ employee.username }} {% if user == employee %} (Me){% endif %}</a></td>
+                  <td class="text-tertiary"><a class="underline" href="{{ employee.get_absolute_url }}">{{ employee.username }} {% if user == employee %} (Me){% endif %}</a></td>
                   <td class="text-center">{{ employee.first_name }} {{ employee.last_name }}</td>
                   <td class="text-right">{{ employee.get_role_display }}</td>
                 </tr>

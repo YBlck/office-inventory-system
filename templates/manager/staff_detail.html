@@ -77,13 +77,13 @@
                     <tr>
                       <td>{{ forloop.counter }}</td>
                       <td>
-                        <a class="text-tertiary" href="{% url 'manager:equipment-detail' pk=equipment.id %}">
+                        <a class="text-tertiary underline" href="{% url 'manager:equipment-detail' pk=equipment.id %}">
                           {{ equipment.name }}
                         </a>
                       </td>
                       <td class="text-center">
 
-                        <a class="text-tertiary" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
+                        <a class="text-tertiary underline" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
                           {{ equipment.category }}
                         </a>
                       </td>

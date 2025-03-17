@@ -72,7 +72,7 @@
                   {% for item in category.equipment.all %}
                     <tr>
                       <td>
-                        <a class="text-tertiary"
+                        <a class="text-tertiary underline"
                            href="{% url 'manager:equipment-detail' pk=item.id %}">{{ item.name }}</a>
                       </td>
                       <td class="text-center">
