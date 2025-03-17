@@ -143,3 +143,55 @@
 .underline:hover::after {
     transform: scaleX(1);
 }
+
+@media (max-width: 575px) {
+    .top-5 {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 991px) {
+
+  .navbar-collapse {
+    text-align: center;
+  }
+
+  .navbar-collapse.show .Btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-radius: 10px;
+    background-color: white !important;
+    padding: 15px 20px;
+    margin: 5px 0;
+    text-decoration: none;
+  }
+
+  .navbar-collapse.show .menu-icon {
+    display: none;
+  }
+
+  .navbar-collapse.show .menu-button-text {
+    opacity: 1 !important;
+    position: static;
+    color: black !important;
+    font-size: 20px;
+    white-space: nowrap;
+    text-align: center;
+    flex-grow: 1;
+  }
+
+  .navbar-collapse .Btn {
+    justify-content: center;
+  }
+
+  .rotate {
+    transform: rotate(180deg);
+  }
+}
+
+.navbar {
+  padding: 5px 0;
+}
+
