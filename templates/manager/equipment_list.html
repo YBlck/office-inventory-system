@@ -30,7 +30,7 @@
               <button class="btn btn-outline-primary btn-icon-only mob-hide" onclick="window.history.back();">
                 <span class="fas fa-arrow-left"></span>
               </button>
-              <div class="col-5">
+              <div class="col-6">
                 <form action="" method="get" class="form-inline">
                   <div class="mb-1">
                     <div class="input-group">
@@ -56,35 +56,79 @@
 
             <div class="mb-5">
               {% if equipment_list %}
-              <table class="table">
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th class="text-center">Serial number</th>
-                  <th class="text-center">Category</th>
-                  <th class="text-right">Assignment</th>
-                </tr>
-              {% for equipment in equipment_list %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td><a class="text-tertiary underline" href="{{ equipment.get_absolute_url }}">{{ equipment.name }}</a></td>
-                  <td class="text-center">{{ equipment.internal_serial_number }}</td>
-                  <td class="text-center">
-                    <a class="text-tertiary underline" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
-                      {{ equipment.category }}
-                    </a>
-                  </td>
-                  <td class="text-right">
-                    {% if equipment.assigned_to.all %}
-                      Users assigned: {{ equipment.assigned_to.all.count }}
-                    {% else %}
-                      <span class="text-success">Not assigned</span>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
 
-              </table>
+                <!-- for desktop -->
+                <div class="table-responsive d-none d-md-block">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th class="text-center">Serial number</th>
+                      <th class="text-center">Category</th>
+                      <th class="text-right">Assignment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for equipment in equipment_list %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                          <a class="text-tertiary underline" href="{{ equipment.get_absolute_url }}">
+                            {{ equipment.name }}
+                          </a>
+                        </td>
+                        <td class="text-center">{{ equipment.internal_serial_number }}</td>
+                        <td class="text-center">
+                          <a class="text-tertiary underline"
+                             href="{% url 'manager:category-detail' pk=equipment.category_id %}">
+                            {{ equipment.category }}
+                          </a>
+                        </td>
+                        <td class="text-right">
+                          {% if equipment.assigned_to.all %}
+                            {{ equipment.assigned_to.all.count }} user{{ equipment.assigned_to.all.count|pluralize }}
+                          {% else %}
+                            <span class="text-success">Unassigned</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- for mobile -->
+                <div class="d-block d-md-none">
+                {% for equipment in equipment_list %}
+                  <div class="border rounded p-3 mt-3 mb-3">
+                    <p class="text-center">
+                      <a class="text-tertiary" href="{{ equipment.get_absolute_url }}">
+                        <strong>{{ equipment.name }}</strong>
+                      </a>
+                    </p>
+                    <hr>
+                    <p>
+                      <strong>Serial number: </strong> {{ equipment.internal_serial_number }}
+                    </p>
+                    <p>
+                      <strong>Category: </strong>
+                      <a class="text-tertiary" href="{% url 'manager:category-detail' pk=equipment.category_id %}">
+                        {{ equipment.category }}
+                      </a>
+                    </p>
+                    <p class="mb-0">
+                      {% if equipment.assigned_to.all %}
+                        {{ equipment.assigned_to.all.count }} user{{ equipment.assigned_to.all.count|pluralize }}
+                      {% else %}
+                        <span class="text-success">Unassigned</span>
+                      {% endif %}
+                    </p>
+                  </div>
+                {% endfor %}
+
+                </div>
+
               {% else %}
                 <p>There are no equipment in the system.</p>
               {% endif %}

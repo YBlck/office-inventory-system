@@ -56,28 +56,59 @@
 
             <div class="mb-5">
               {% if staff_list %}
-              <table class="table">
-                <tr>
-                  <th></th>
-                  <th>Username</th>
-                  <th class="text-center">Full name</th>
-                  <th class="text-right">Role</th>
-                </tr>
-              {% for employee in staff_list %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td class="text-tertiary"><a class="underline" href="{{ employee.get_absolute_url }}">{{ employee.username }} {% if user == employee %} (Me){% endif %}</a></td>
-                  <td class="text-center">{{ employee.first_name }} {{ employee.last_name }}</td>
-                  <td class="text-right">{{ employee.get_role_display }}</td>
-                </tr>
-              {% endfor %}
 
-              </table>
+                <!-- for desktop -->
+                <div class="table-responsive d-none d-md-block">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th></th>
+                      <th>Username</th>
+                      <th class="text-center">Full name</th>
+                      <th class="text-right">Role</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for employee in staff_list %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                          <a class="underline text-tertiary" href="{{ employee.get_absolute_url }}">{{ employee.username }} {% if user == employee %}
+                            (Me){% endif %}</a>
+                        </td>
+                        <td class="text-center">{{ employee.first_name }} {{ employee.last_name }}</td>
+                        <td class="text-right">{{ employee.get_role_display }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- for mobile -->
+                <div class="d-block d-md-none">
+                  {% for employee in staff_list %}
+                    <div class="border rounded p-3 mt-3 mb-3">
+                      <p class="text-center">
+                        <a class="text-tertiary" href="{{ employee.get_absolute_url }}">
+                          <strong>
+                          {{ employee.username }} {% if user == employee %} (Me){% endif %}
+                          </strong>
+                        </a>
+                      </p>
+                      <hr>
+                      <p><strong>Full name:</strong> {{ employee.first_name }} {{ employee.last_name }}</p>
+                      <p class="mb-0"><strong>Role:</strong> {{ employee.get_role_display }}</p>
+                    </div>
+                  {% endfor %}
+                </div>
+
               {% else %}
-                <p>There are no workers in the system.</p>
+                <p>There are no employee in the system.</p>
               {% endif %}
-                {% include "includes/pagination.html" %}
+              {% include "includes/pagination.html" %}
             </div>
+
           </div>
         </div>
       </div>

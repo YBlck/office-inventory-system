@@ -49,95 +49,195 @@
         <div class="row justify-content-center">
           <div class="col-lg-12">
             <div class="mb-5">
-              <div class="">
-                <button style="position: absolute;" class="btn btn-outline-primary btn-icon-only mob-hide" onclick="window.history.back();">
+
+              <div>
+                <button style="position: absolute;" class="btn btn-outline-primary btn-icon-only mob-hide"
+                        onclick="window.history.back();">
                   <span class="fas fa-arrow-left"></span>
                 </button>
                 <h3 class="text-center">Equipment in use:</h3>
               </div>
-              {% if staff.assigned_equipment.exists %}
-                <table class="table">
-                  <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th class="text-center">Category</th>
-                    <th class="text-center">Assignment date</th>
-                    <th class="text-center">Support</th>
-                    <th></th>
-                  </tr>
 
-                  {% for equipment in staff.assigned_equipment.all %}
-                    <tr>
-                      <td>{{ forloop.counter }}</td>
-                      <td>
-                        <a class="text-tertiary underline" href="{% url 'manager:equipment-detail' pk=equipment.id %}">
-                          {{ equipment.name }}
-                        </a>
-                      </td>
-                      <td class="text-center">
+              <div>
+                {% if staff.assigned_equipment.exists %}
 
-                        <a class="text-tertiary underline" href="{% url 'manager:category-detail' pk=equipment.category_id%}">
-                          {{ equipment.category }}
-                        </a>
-                      </td>
-                      <td class="text-center">
-                        {% for assignment in equipment.assignments.all %}
-                          {% if assignment.employee == staff %}
-                            {{ assignment.assigned_at }}
-                          {% endif %}
-                        {% endfor %}
-                      </td>
-                      <td class="text-center">
-                        {% with equipment.repair_requests.last as latest_request %}
-                          {% if user.role == "admin" or user.role == "support" or user == staff %}
-                            {% if latest_request %}
-                              {% if latest_request.status == "completed" %}
-                                <a class="btn btn-grow btn-outline-success btn-sm" href="{% url 'manager:repair-request-delete' pk=latest_request.id %}?next={{ request.path }}">
-                                  {{ latest_request.get_status_display }}
-                                </a>
-                              {% else %}
-                                <a class="btn btn-outline-gray btn-sm disabled"
-                                   href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
-                                  {{ latest_request.get_status_display }}
-                                </a>
+                  <!-- for desktop -->
+                  <div class="table-responsive d-none d-md-block">
+                    <table class="table">
+                      <thead>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th class="text-center">Category</th>
+                        <th class="text-center">Assigned</th>
+                        <th class="text-center">Support</th>
+                        <th></th>
+                      </tr>
+                      </thead>
+
+                      <tbody>
+                      {% for equipment in staff.assigned_equipment.all %}
+                        <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>
+                            <a class="text-tertiary underline"
+                               href="{% url 'manager:equipment-detail' pk=equipment.id %}">
+                              {{ equipment.name }}
+                            </a>
+                          </td>
+                          <td class="text-center">
+
+                            <a class="text-tertiary underline"
+                               href="{% url 'manager:category-detail' pk=equipment.category_id %}">
+                              {{ equipment.category }}
+                            </a>
+                          </td>
+                          <td class="text-center">
+                            {% for assignment in equipment.assignments.all %}
+                              {% if assignment.employee == staff %}
+                                {{ assignment.assigned_at|date:"d M Y" }}
                               {% endif %}
-                            {% else %}
-                              <a class="btn btn-grow btn-outline-info btn-sm"
-                                 href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
-                                Request
-                              </a>
-                            {% endif %}
-                          {% else %}
-                            {% if latest_request %}
-                              <a class="btn btn-outline-gray btn-sm disabled" href="#">
-                                {{ latest_request.get_status_display }}
-                              </a>
-                            {% else %}
-                              <a class="btn btn-outline-info btn-sm disabled" href="#">
-                                Request
-                              </a>
-                            {% endif %}
-                          {% endif %}
-                        {% endwith %}
-                      </td>
+                            {% endfor %}
+                          </td>
+                          <td class="text-center">
+                            {% with equipment.repair_requests.last as latest_request %}
+                              {% if user.role == "admin" or user.role == "support" or user == staff %}
+                                {% if latest_request %}
+                                  {% if latest_request.status == "completed" %}
+                                    <a class="btn btn-grow btn-outline-success btn-sm"
+                                       href="{% url 'manager:repair-request-delete' pk=latest_request.id %}?next={{ request.path }}">
+                                      {{ latest_request.get_status_display }}
+                                    </a>
+                                  {% else %}
+                                    <a class="btn btn-outline-gray btn-sm disabled"
+                                       href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                      {{ latest_request.get_status_display }}
+                                    </a>
+                                  {% endif %}
+                                {% else %}
+                                  <a class="btn btn-grow btn-outline-info btn-sm"
+                                     href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                    Request
+                                  </a>
+                                {% endif %}
+                              {% else %}
+                                {% if latest_request %}
+                                  <a class="btn btn-outline-gray btn-sm disabled" href="#">
+                                    {{ latest_request.get_status_display }}
+                                  </a>
+                                {% else %}
+                                  <a class="btn btn-outline-info btn-sm disabled" href="#">
+                                    Request
+                                  </a>
+                                {% endif %}
+                              {% endif %}
+                            {% endwith %}
+                          </td>
 
-                      <td class="text-right">
-                        {% if user.role == "admin" or user.role == "support" %}
-                          <a  class="btn btn-grow btn-outline-danger btn-sm" href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=staff.id %}?next={{ request.path }}">
-                            Delete
+                          <td class="text-right">
+                            {% if user.role == "admin" or user.role == "support" %}
+                              <a class="btn btn-grow btn-outline-danger btn-sm"
+                                 href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=staff.id %}?next={{ request.path }}">
+                                Delete
+                              </a>
+                            {% else %}
+                              <a href="#" class="btn btn-outline-danger btn-sm disabled">
+                                Delete
+                              </a>
+                            {% endif %}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!--for mobile -->
+                  <div class="d-block d-md-none">
+                    {% for equipment in staff.assigned_equipment.all %}
+
+                      <div class="border rounded p-3 mt-3 mb-3">
+                        <p class="text-center">
+                          <a class="text-tertiary"
+                             href="{% url 'manager:equipment-detail' pk=equipment.id %}">
+                            <strong>{{ equipment.name }}</strong>
                           </a>
-                        {% else %}
-                          <a href="#"  class="btn btn-outline-danger btn-sm disabled">
-                            Delete
+                        </p>
+                        <hr>
+                        <p>
+                          <strong>Category: </strong>
+                          <a class="text-tertiary"
+                             href="{% url 'manager:category-detail' pk=equipment.category_id %}">
+                            {{ equipment.category }}
                           </a>
-                        {% endif %}
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </table>
-              {% else %}
-                <p class="text-center">No equipment assigned yet.</p>
-              {% endif %}
+                        </p>
+                        <p>
+                          <strong>Assigned: </strong>
+                          {% for assignment in equipment.assignments.all %}
+                            {% if assignment.employee == staff %}
+                              {{ assignment.assigned_at|date:"d M Y" }}
+                            {% endif %}
+                          {% endfor %}
+                        </p>
+
+                        <div class="d-flex justify-content-between">
+                          <span>
+                            {% with equipment.repair_requests.last as latest_request %}
+                              {% if user.role == "admin" or user.role == "support" or user == staff %}
+                                {% if latest_request %}
+                                  {% if latest_request.status == "completed" %}
+                                    <a class="btn btn-outline-success btn-sm"
+                                       href="{% url 'manager:repair-request-delete' pk=latest_request.id %}?next={{ request.path }}">
+                                      {{ latest_request.get_status_display }}
+                                    </a>
+                                  {% else %}
+                                    <a class="btn btn-outline-gray btn-sm disabled"
+                                       href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                      {{ latest_request.get_status_display }}
+                                    </a>
+                                  {% endif %}
+                                {% else %}
+                                  <a class="btn btn-outline-info btn-sm"
+                                     href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                    Request
+                                  </a>
+                                {% endif %}
+                              {% else %}
+                                {% if latest_request %}
+                                  <a class="btn btn-outline-gray btn-sm disabled" href="#">
+                                    {{ latest_request.get_status_display }}
+                                  </a>
+                                {% else %}
+                                  <a class="btn btn-outline-info btn-sm disabled" href="#">
+                                    Request
+                                  </a>
+                                {% endif %}
+                              {% endif %}
+                            {% endwith %}
+                          </span>
+
+                          <span>
+                          {% if user.role == "admin" or user.role == "support" %}
+                            <a class="btn btn-outline-danger btn-sm"
+                               href="{% url 'manager:equipment-delete-user' equipment_pk=equipment.id user_id=staff.id %}?next={{ request.path }}">
+                              Delete
+                            </a>
+                          {% else %}
+                            <a href="#" class="btn btn-outline-danger btn-sm disabled">
+                              Delete
+                            </a>
+                          {% endif %}
+                          </span>
+                        </div>
+
+                      </div>
+
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <p class="text-center">No equipment assigned yet.</p>
+                {% endif %}
+              </div>
 
             </div>
           </div>

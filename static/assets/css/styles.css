@@ -175,7 +175,7 @@
   .navbar-collapse.show .menu-button-text {
     opacity: 1 !important;
     position: static;
-    color: black !important;
+    color: #212a39 !important;
     font-size: 20px;
     white-space: nowrap;
     text-align: center;

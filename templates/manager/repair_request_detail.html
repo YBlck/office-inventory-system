@@ -9,11 +9,11 @@
         <div class="row justify-content-center">
           <div class="col-12 col-md-12 text-center">
 
-            <h1 class="display-3 top-5 mb-4">Repair request for:</h1>
-            <h3 class="mt-2">{{ repair_request.equipment.name }}</h3>
+            <h1 class="display-3 top-5 mb-4">Support request #{{ repair_request.id }}:</h1>
             <div class="mt-3">
-              <p><strong>Internal s/n:</strong>{{ repair_request.equipment.internal_serial_number }}</p>
-              <p><strong>Manufacturer s/n:</strong>{{ repair_request.equipment.manufacturer_serial_number }}</p>
+              <p><strong>Equipment:</strong> {{ repair_request.equipment.name }}</p>
+              <p><strong>Manufacturer s/n:</strong> {{ repair_request.equipment.manufacturer_serial_number }}</p>
+              <p><strong>Internal s/n:</strong> {{ repair_request.equipment.internal_serial_number }}</p>
               <p class="m-4"><strong>Status:</strong> {{ repair_request.get_status_display }}</p>
             </div>
 
@@ -53,9 +53,14 @@
                       onclick="window.history.back();">
                 <span class="fas fa-arrow-left"></span>
               </button>
-              <h4 class="text-center">Reported by {{ repair_request.employee.first_name }} {{ repair_request.employee.last_name }} at {{ repair_request.date_reported }}</h4>
-              <h3 class="text-center">Description:</h3>
+              <h4 class="text-center">Reported by: {{ repair_request.employee.first_name }} {{ repair_request.employee.last_name }}</h4>
+              <h6 class="text-center">{{ repair_request.date_reported }}</h6>
+              <h3 class="text-center mt-3">Description:</h3>
               <h5 class="text-center">{{ repair_request.description }}</h5>
+              {% if repair_request.date_completed %}
+                <h4 class="text-center mt-3">Completed</h4>
+                <h6 class="text-center">{{ repair_request.date_completed }}</h6>
+              {% endif %}
             </div>
           </div>
         </div>

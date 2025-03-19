@@ -30,7 +30,7 @@
               <button class="btn btn-outline-primary btn-icon-only mob-hide" onclick="window.history.back();">
                 <span class="fas fa-arrow-left"></span>
               </button>
-              <div class="col-5">
+              <div class="col-6">
                 <form action="" method="get" class="form-inline">
                   <div class="mb-1">
                     <div class="input-group">
@@ -56,61 +56,115 @@
 
             <div class="mb-5">
               {% if repair_request_list %}
-              <table class="table">
-                <tr>
-                  <th></th>
-                  <th>Equipment</th>
-                  <th class="text-center">Detail</th>
-                  <th class="text-center">Reported by</th>
-                  <th class="text-center">Reported/Completed</th>
-                  <th class="text-right">Status</th>
-                </tr>
-              {% for request in repair_request_list %}
-                <tr>
-                  <td>{{ forloop.counter }}</td>
-                  <td>
-                    <a class="text-tertiary underline" href="{% url 'manager:equipment-detail' pk=request.equipment.id %}">
-                      {{ request.equipment.name }}
-                    </a>
-                  </td>
-                  <td class="text-center">
-                    <a class="btn btn-grow btn-outline-info btn-sm" href="{{ request.get_absolute_url }}">
-                      More
-                    </a>
-                  </td>
-                  <td class="text-center">
-                    <a class="text-tertiary underline" href="{% url 'manager:staff-detail' pk=request.employee.id %}">
-                      {{ request.employee.username }}
-                    </a>
-                  </td>
-                  <td class="text-center">
-                    {% if request.date_completed %}
-                      {{ request.date_completed|date:"d M Y" }}
-                    {% else %}
-                      {{ request.date_reported|date:"d M Y" }}
-                    {% endif %}
-                  </td>
-                  <td class="text-right">
-                    {% if user.role == "admin" or user.role == "support" %}
-                      {% if request.status == "completed" %}
+
+                <!-- for desktop -->
+                <div class="table-responsive d-none d-md-block">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th></th>
+                      <th>Request</th>
+                      <th class="text-center">Equipment</th>
+                      <th class="text-center">Reported/Completed</th>
+                      <th class="text-right">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for request in repair_request_list %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                          <a class="text-tertiary underline" href="{{ request.get_absolute_url }}">
+                            Support request #{{ request.pk }}
+                          </a>
+                        </td>
+                        <td>
+                          <a class="text-tertiary underline"
+                             href="{% url 'manager:equipment-detail' pk=request.equipment.id %}">
+                            {{ request.equipment.name }}
+                          </a>
+                        </td>
+                        <td class="text-center">
+                          {% if request.date_completed %}
+                            {{ request.date_completed|date:"d M Y" }}
+                          {% else %}
+                            {{ request.date_reported|date:"d M Y" }}
+                          {% endif %}
+                        </td>
+                        <td class="text-right">
+                          {% if user.role == "admin" or user.role == "support" %}
+                            {% if request.status == "completed" %}
+                              <a class="btn btn-outline-dark btn-sm disabled" href="#">
+                                {{ request.get_status_display }}
+                              </a>
+                            {% else %}
+                              <a class="btn btn-grow btn-outline-info btn-sm"
+                                 href="{% url 'manager:repair-request-update-status' pk=request.id %}">
+                                {{ request.get_status_display }}
+                              </a>
+                            {% endif %}
+                          {% else %}
+                            <a class="btn btn-outline-dark btn-sm disabled" href="#">
+                              {{ request.get_status_display }}
+                            </a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- for mobile -->
+                <div class="d-block d-md-none">
+                {% for request in repair_request_list %}
+                  <div class="border rounded p-3 mt-3 mb-3">
+                    <p class="text-center">
+                      <a class="text-tertiary" href="{{ request.get_absolute_url }}">
+                        <strong>Support request #{{ request.pk }}</strong>
+                      </a>
+                    </p>
+                    <hr>
+                    <p>
+                      <strong>Equipment: </strong>
+                      <a class="text-tertiary"
+                         href="{% url 'manager:equipment-detail' pk=request.equipment.id %}">
+                        {{ request.equipment.name }}
+                      </a>
+                    </p>
+                    <p>
+                      <strong>Reported/Completed: </strong>
+                      {% if request.date_completed %}
+                        {{ request.date_completed|date:"d M Y" }}
+                      {% else %}
+                        {{ request.date_reported|date:"d M Y" }}
+                      {% endif %}
+                    </p>
+                    <p class="mb-0">
+                      {% if user.role == "admin" or user.role == "support" %}
+                        {% if request.status == "completed" %}
+                          <a class="btn btn-outline-dark btn-sm disabled" href="#">
+                            {{ request.get_status_display }}
+                          </a>
+                        {% else %}
+                          <a class="btn btn-outline-info btn-sm"
+                             href="{% url 'manager:repair-request-update-status' pk=request.id %}">
+                            {{ request.get_status_display }}
+                          </a>
+                        {% endif %}
+                      {% else %}
                         <a class="btn btn-outline-dark btn-sm disabled" href="#">
                           {{ request.get_status_display }}
                         </a>
-                      {% else %}
-                        <a class="btn btn-grow btn-outline-info btn-sm" href="{% url 'manager:repair-request-update-status' pk=request.id %}">
-                          {{ request.get_status_display }}
-                        </a>
                       {% endif %}
-                    {% else %}
-                      <a class="btn btn-outline-dark btn-sm disabled" href="#">
-                        {{ request.get_status_display }}
-                      </a>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
+                    </p>
 
-              </table>
+
+
+                  </div>
+                {% endfor %}
+                </div>
+
               {% else %}
                 <p>There are no repair requests in the system.</p>
               {% endif %}

@@ -55,32 +55,65 @@
 
               {% if category.equipment.all %}
 
-                <table class="table">
-                  <tr>
-                    <th>Equipment name</th>
-                    <th class="text-center">Added to system</th>
-                    <th class="text-right">Assignment</th>
-                  </tr>
-
-                  {% for item in category.equipment.all %}
+                <!-- for desktop -->
+                <div class="table-responsive d-none d-md-block">
+                  <table class="table">
+                    <thead>
                     <tr>
-                      <td>
-                        <a class="text-tertiary underline"
-                           href="{% url 'manager:equipment-detail' pk=item.id %}">{{ item.name }}</a>
-                      </td>
-                      <td class="text-center">
-                        {{ item.added_at }}
-                      </td>
-                      <td class="text-right">
+                      <th>Equipment name</th>
+                      <th class="text-center">Added</th>
+                      <th class="text-right">Assignment</th>
+                    </tr>
+                    </thead>
+
+                    <tbody></tbody>
+
+                    {% for item in category.equipment.all %}
+                      <tr>
+                        <td>
+                          <a class="text-tertiary underline" href="{% url 'manager:equipment-detail' pk=item.id %}">
+                            {{ item.name }}
+                          </a>
+                        </td>
+                        <td class="text-center">
+                          {{ item.added_at }}
+                        </td>
+                        <td class="text-right">
+                          {% if item.assigned_to.all %}
+                            Users assigned: {{ item.assigned_to.all.count }}
+                          {% else %}
+                            <span class="text-success">Not assigned</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+                </div>
+
+                <!-- for mobile -->
+                <div class="d-block d-md-none">
+                  {% for item in category.equipment.all %}
+                    <div class="border rounded p-3 mt-3 mb-3">
+                      <p class="text-center">
+                        <a class="text-tertiary" href="{% url 'manager:equipment-detail' pk=item.id %}">
+                          <strong>{{ item.name }}</strong>
+                        </a>
+                      </p>
+                      <hr>
+                      <p>
+                        <strong>Added: </strong> {{ item.added_at }}
+                      </p>
+                      <p class="mb-0">
                         {% if item.assigned_to.all %}
-                          Users assigned: {{ item.assigned_to.all.count }}
+                          <strong>Users assigned:</strong> {{ item.assigned_to.all.count }}
                         {% else %}
                           <span class="text-success">Not assigned</span>
                         {% endif %}
-                      </td>
-                    </tr>
+                      </p>
+                    </div>
                   {% endfor %}
-                </table>
+
+                </div>
               {% else %}
                 <p class="text-center">No equipment yet.</p>
               {% endif %}

@@ -30,7 +30,7 @@
               <button class="btn btn-outline-primary btn-icon-only mob-hide" onclick="window.history.back();">
                 <span class="fas fa-arrow-left"></span>
               </button>
-              <div class="col-5">
+              <div class="col-6">
                 <form action="" method="get" class="form-inline">
                   <div class="mb-1">
                     <div class="input-group">
@@ -55,36 +55,103 @@
             </div>
 
             <div class="mb-5">
+              {% if category_list %}
 
-            {% if category_list %}
-              <table class="table">
-                <tr>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th class="text-center">Items</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-                {% for category in category_list %}
-                  <tr>
-                    <td><a class="text-tertiary underline" href="{% url 'manager:category-detail' pk=category.id %}">{{ category.name }}</a></td>
-                    <td>{{ category.description }}</td>
-                    <td class="text-center">{{ category.equipment.count }}</td>
-                    {% if user.role == "admin" or user.role == "support" %}
-                      <td class="text-right"><a href="{% url 'manager:category-update' category.id %}" class="btn btn-grow btn-outline-tertiary btn-sm">Modify</a>
-                      <td class="text-right"><a href="{% url 'manager:category-delete' category.id %}" class="btn btn-grow btn-outline-danger btn-sm">Delete</a>
-                    {% else %}
-                      <td class="text-right"><a href="#" class="btn btn-outline-tertiary btn-sm disabled">Modify</a>
-                      <td class="text-right"><a href="#" class="btn btn-outline-danger btn-sm disabled">Delete</a>
-                    {% endif %}
-                  </tr>
+                <!-- for desktop -->
+                <div class="table-responsive d-none d-md-block">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th class="text-center">Items</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for category in category_list %}
+                      <tr>
+                        <td>
+                          <a class="text-tertiary underline" href="{% url 'manager:category-detail' pk=category.id %}">
+                            {{ category.name }}
+                          </a>
+                        </td>
+                        <td>
+                          {{ category.description }}
+                        </td>
+                        <td class="text-center">
+                          {{ category.equipment.count }}
+                        </td>
+                        {% if user.role == "admin" or user.role == "support" %}
+                          <td class="text-right">
+                            <a href="{% url 'manager:category-update' pk=category.id %}" class="btn btn-grow btn-outline-tertiary btn-sm">
+                              Modify
+                            </a>
+                          </td>
+                          <td class="text-right">
+                            <a href="{% url 'manager:category-delete' pk=category.id %}" class="btn btn-grow btn-outline-danger btn-sm">
+                              Delete
+                            </a>
+                          </td>
+                        {% else %}
+                          <td class="text-right">
+                            <a href="#" class="btn btn-outline-tertiary btn-sm disabled">
+                              Modify
+                            </a>
+                          </td>
+                          <td class="text-right">
+                            <a href="#" class="btn btn-outline-danger btn-sm disabled">
+                              Delete
+                            </a>
+                          </td>
+                        {% endif %}
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- for mobile -->
+                <div class="d-block d-md-none">
+                  {% for category in category_list %}
+                    <div class="border rounded p-3 mt-3 mb-3">
+                      <p class="text-center">
+                        <a class="text-tertiary" href="{% url 'manager:category-detail' pk=category.id %}">
+                          <strong>{{ category.name }}</strong>
+                        </a>
+                      </p>
+                      <hr>
+                      <p>
+                        <strong>Description:</strong> {{ category.description }}
+                      </p>
+
+                      <div class="d-flex justify-content-between">
+                        {% if user.role == "admin" or user.role == "support" %}
+                          <a href="{% url 'manager:category-update' pk=category.id %}" class="btn btn-outline-tertiary btn-sm">
+                            Modify
+                          </a>
+                          <a href="{% url 'manager:category-delete' pk=category.id %}" class="btn btn-outline-danger btn-sm">
+                            Delete
+                          </a>
+                        {% else %}
+                          <a href="#" class="btn btn-outline-tertiary btn-sm disabled">
+                            Modify
+                          </a>
+                          <a href="#" class="btn btn-outline-danger btn-sm disabled">
+                            Delete
+                          </a>
+                        {% endif %}
+                      </div>
+                    </div>
                 {% endfor %}
-              </table>
-            {% else %}
-              <p>There are no categories in the system.</p>
-            {% endif %}
+                </div>
+              {% else %}
+                <p>There are no categories in the system.</p>
+              {% endif %}
 
-                {% include "includes/pagination.html" %}
+              {% include "includes/pagination.html" %}
 
             </div>
           </div>
