@@ -100,17 +100,17 @@
                             {% endfor %}
                           </td>
                           <td class="text-center">
-                            {% with equipment.repair_requests.last as latest_request %}
+                            {% with equipment.repair_requests.first as latest_request %}
                               {% if user.role == "admin" or user.role == "support" or user == staff %}
                                 {% if latest_request %}
                                   {% if latest_request.status == "completed" %}
-                                    <a class="btn btn-grow btn-outline-success btn-sm"
-                                       href="{% url 'manager:repair-request-delete' pk=latest_request.id %}?next={{ request.path }}">
-                                      {{ latest_request.get_status_display }}
+                                    <a class="btn btn-grow btn-outline-info btn-sm"
+                                       href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                      Request
                                     </a>
                                   {% else %}
                                     <a class="btn btn-outline-gray btn-sm disabled"
-                                       href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                       href="#">
                                       {{ latest_request.get_status_display }}
                                     </a>
                                   {% endif %}
@@ -122,9 +122,15 @@
                                 {% endif %}
                               {% else %}
                                 {% if latest_request %}
-                                  <a class="btn btn-outline-gray btn-sm disabled" href="#">
-                                    {{ latest_request.get_status_display }}
-                                  </a>
+                                  {% if latest_request.status == "completed" %}
+                                    <a class="btn btn-outline-info btn-sm disabled" href="#">
+                                      Request
+                                    </a>
+                                  {% else %}
+                                    <a class="btn btn-outline-gray btn-sm disabled" href="#">
+                                      {{ latest_request.get_status_display }}
+                                    </a>
+                                  {% endif %}
                                 {% else %}
                                   <a class="btn btn-outline-info btn-sm disabled" href="#">
                                     Request
@@ -182,17 +188,17 @@
 
                         <div class="d-flex justify-content-between">
                           <span>
-                            {% with equipment.repair_requests.last as latest_request %}
+                            {% with equipment.repair_requests.first as latest_request %}
                               {% if user.role == "admin" or user.role == "support" or user == staff %}
                                 {% if latest_request %}
                                   {% if latest_request.status == "completed" %}
-                                    <a class="btn btn-outline-success btn-sm"
-                                       href="{% url 'manager:repair-request-delete' pk=latest_request.id %}?next={{ request.path }}">
-                                      {{ latest_request.get_status_display }}
+                                    <a class="btn btn-outline-info btn-sm"
+                                       href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                      Request
                                     </a>
                                   {% else %}
                                     <a class="btn btn-outline-gray btn-sm disabled"
-                                       href="{% url 'manager:repair-request-user-create' equipment_pk=equipment.id user_id=user.id %}">
+                                       href="#">
                                       {{ latest_request.get_status_display }}
                                     </a>
                                   {% endif %}
@@ -204,9 +210,15 @@
                                 {% endif %}
                               {% else %}
                                 {% if latest_request %}
-                                  <a class="btn btn-outline-gray btn-sm disabled" href="#">
-                                    {{ latest_request.get_status_display }}
-                                  </a>
+                                  {% if latest_request.status == "completed" %}
+                                    <a class="btn btn-outline-info btn-sm disabled" href="#">
+                                      Request
+                                    </a>
+                                  {% else %}
+                                    <a class="btn btn-outline-gray btn-sm disabled" href="#">
+                                      {{ latest_request.get_status_display }}
+                                    </a>
+                                  {% endif %}
                                 {% else %}
                                   <a class="btn btn-outline-info btn-sm disabled" href="#">
                                     Request

@@ -72,10 +72,10 @@ class StaffListView(LoginRequiredMixin, generic.ListView):
 class StaffDetailView(LoginRequiredMixin, generic.DetailView):
     model = Staff
     queryset = Staff.objects.prefetch_related(
-        "assigned_equipment__assignments__employee"
-    ).prefetch_related(
-        "assigned_equipment__category"
+        "assigned_equipment__assignments__employee",
+        "assigned_equipment__category",
     )
+
 
 
 class StaffCreateView(LoginRequiredMixin, generic.CreateView):
@@ -175,7 +175,9 @@ class EquipmentListView(LoginRequiredMixin, generic.ListView):
 
 class EquipmentDetailView(LoginRequiredMixin, generic.DetailView):
     model = Equipment
-    queryset = Equipment.objects.prefetch_related("assignments__employee")
+    queryset = Equipment.objects.prefetch_related(
+        "assignments__employee"
+    )
 
 
 class EquipmentCreateView(LoginRequiredMixin, generic.CreateView):
