@@ -93,6 +93,11 @@ class StaffUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Staff
     form_class = StaffUpdateForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
 
 class StaffDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Staff
