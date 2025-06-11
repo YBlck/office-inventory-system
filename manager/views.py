@@ -19,6 +19,7 @@ from manager.forms import (
     RepairRequestForm,
 )
 from manager.models import Staff, Equipment, Category, RepairRequest
+from manager.permissions import AdminPermissionMixin, AdminOrSelfPermissionMixin, SupportPermissionMixin
 
 
 def index(request):
@@ -78,7 +79,7 @@ class StaffDetailView(LoginRequiredMixin, generic.DetailView):
 
 
 
-class StaffCreateView(LoginRequiredMixin, generic.CreateView):
+class StaffCreateView(LoginRequiredMixin, AdminPermissionMixin, generic.CreateView):
     model = Staff
     form_class = StaffForm
 
@@ -89,7 +90,7 @@ class StaffRegisterView(generic.CreateView):
     template_name = "registration/register.html"
 
 
-class StaffUpdateView(LoginRequiredMixin, generic.UpdateView):
+class StaffUpdateView(LoginRequiredMixin, AdminOrSelfPermissionMixin, generic.UpdateView):
     model = Staff
     form_class = StaffUpdateForm
 
@@ -99,7 +100,7 @@ class StaffUpdateView(LoginRequiredMixin, generic.UpdateView):
         return kwargs
 
 
-class StaffDeleteView(LoginRequiredMixin, generic.DeleteView):
+class StaffDeleteView(LoginRequiredMixin, AdminOrSelfPermissionMixin, generic.DeleteView):
     model = Staff
     success_url = reverse_lazy("manager:staff-list")
 
@@ -128,7 +129,7 @@ class CategoryListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class CategoryCreateView(LoginRequiredMixin, generic.CreateView):
+class CategoryCreateView(LoginRequiredMixin, SupportPermissionMixin, generic.CreateView):
     model = Category
     fields = "__all__"
     success_url = reverse_lazy("manager:category-list")
@@ -139,13 +140,13 @@ class CategoryDetailView(LoginRequiredMixin, generic.DetailView):
     queryset = Category.objects.prefetch_related("equipment__assigned_to")
 
 
-class CategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
+class CategoryUpdateView(LoginRequiredMixin, SupportPermissionMixin, generic.UpdateView):
     model = Category
     fields = "__all__"
     success_url = reverse_lazy("manager:category-list")
 
 
-class CategoryDeleteView(LoginRequiredMixin, generic.DeleteView):
+class CategoryDeleteView(LoginRequiredMixin, SupportPermissionMixin, generic.DeleteView):
     model = Category
     success_url = reverse_lazy("manager:category-list")
 
@@ -185,12 +186,12 @@ class EquipmentDetailView(LoginRequiredMixin, generic.DetailView):
     )
 
 
-class EquipmentCreateView(LoginRequiredMixin, generic.CreateView):
+class EquipmentCreateView(LoginRequiredMixin, SupportPermissionMixin, generic.CreateView):
     model = Equipment
     form_class = EquipmentForm
 
 
-class EquipmentAssignmentView(LoginRequiredMixin, generic.UpdateView):
+class EquipmentAssignmentView(LoginRequiredMixin, SupportPermissionMixin, generic.UpdateView):
     model = Equipment
     form_class = EquipmentAssignForm
     template_name = "manager/equipment_assign.html"
@@ -221,12 +222,12 @@ def delete_user_from_equipment(request, equipment_pk, user_id):
     return redirect(next_url, pk=equipment_pk)
 
 
-class EquipmentUpdateView(LoginRequiredMixin, generic.UpdateView):
+class EquipmentUpdateView(LoginRequiredMixin, SupportPermissionMixin, generic.UpdateView):
     model = Equipment
     form_class = EquipmentForm
 
 
-class EquipmentDeleteView(LoginRequiredMixin, generic.DeleteView):
+class EquipmentDeleteView(LoginRequiredMixin, SupportPermissionMixin, generic.DeleteView):
     model = Equipment
     success_url = reverse_lazy("manager:equipment-list")
 
@@ -304,7 +305,7 @@ class RepairRequestUpdateView(LoginRequiredMixin, generic.UpdateView):
     fields = ("description", "status")
 
 
-class RepairRequestDeleteView(LoginRequiredMixin, generic.DeleteView):
+class RepairRequestDeleteView(LoginRequiredMixin, SupportPermissionMixin, generic.DeleteView):
     model = RepairRequest
     template_name = "manager/repair_request_confirm_delete.html"
 
