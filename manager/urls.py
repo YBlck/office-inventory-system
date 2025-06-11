@@ -59,12 +59,12 @@ urlpatterns = [
         name="category-create"
     ),
     path(
-        "categories/<int:pk>/update",
+        "categories/<int:pk>/update/",
         CategoryUpdateView.as_view(),
         name="category-update"
     ),
     path(
-        "categories/<int:pk>/delete",
+        "categories/<int:pk>/delete/",
         CategoryDeleteView.as_view(),
         name="category-delete"
     ),
@@ -74,7 +74,7 @@ urlpatterns = [
         EquipmentDetailView.as_view(), name="equipment-detail"
     ),
     path(
-        "equipment/create",
+        "equipment/create/",
         EquipmentCreateView.as_view(),
         name="equipment-create"
     ),
@@ -95,37 +95,37 @@ urlpatterns = [
         delete_user_from_equipment, name="equipment-delete-user"
     ),
     path(
-        "repair-request/",
+        "repair-requests/",
         RepairRequestListView.as_view(),
         name="repair-request-list"
     ),
     path(
-        "repair-request/<int:pk>/",
+        "repair-requests/<int:pk>/",
         RepairRequestDetailView.as_view(),
         name="repair-request-detail"
     ),
     path(
-        "repair-request/create/",
+        "repair-requests/create/",
         RepairRequestCreateView.as_view(),
         name="repair-request-create"
     ),
     path(
-        "repair-request/<int:equipment_pk>/create/<int:user_id>/",
+        "repair-requests/<int:equipment_pk>/create/<int:user_id>/",
         RepairRequestUserCreateView.as_view(),
         name="repair-request-user-create"
     ),
     path(
-        "repair-request/<int:pk>/update/",
+        "repair-requests/<int:pk>/update/",
         RepairRequestUpdateView.as_view(),
         name="repair-request-update"
     ),
     path(
-        "repair-request/<int:pk>/update-status/",
+        "repair-requests/<int:pk>/update-status/",
         repair_request_update_status,
         name="repair-request-update-status"
     ),
     path(
-        "repair-request/<int:pk>/delete/",
+        "repair-requests/<int:pk>/delete/",
         RepairRequestDeleteView.as_view(),
         name="repair-request-delete"
     ),
