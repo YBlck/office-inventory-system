@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 
 from manager.models import Category, Equipment
@@ -19,6 +19,10 @@ def get_equipment_update_url(equipment_id):
 
 def get_equipment_delete_url(equipment_id):
     return reverse("manager:equipment-delete", args=[equipment_id])
+
+
+def get_equipment_assignment_url(equipment_id):
+    return reverse("manager:equipment-assign", args=[equipment_id])
 
 
 def create_employee(username: str, role: str = "employee"):
@@ -57,16 +61,31 @@ class PublicEquipmentViewsTest(TestCase):
 
     def test_equipment_detail_login_required(self):
         response = self.client.get(
-            get_equipment_detail_url(self.test_category.id)
+            get_equipment_detail_url(self.test_equipment.id)
         )
         self.assertNotEqual(response.status_code, 200)
 
     def test_equipment_detail_redirect_to_login_page(self):
         response = self.client.get(
-            get_equipment_detail_url(self.test_category.id)
+            get_equipment_detail_url(self.test_equipment.id)
         )
         self.assertRedirects(
             response, LOGIN_URL + f"?next=/equipment/{self.test_equipment.id}/"
+        )
+
+    def test_equipment_assignment_login_required(self):
+        response = self.client.get(
+            get_equipment_assignment_url(self.test_equipment.id)
+        )
+        self.assertNotEqual(response.status_code, 200)
+
+    def test_equipment_assignment_redirect_to_login_page(self):
+        response = self.client.get(
+            get_equipment_assignment_url(self.test_equipment.id)
+        )
+        self.assertRedirects(
+            response,
+            LOGIN_URL + f"?next=/equipment/{self.test_equipment.id}/assign/",
         )
 
     def test_equipment_update_login_required(self):
@@ -168,6 +187,13 @@ class SupportEquipmentViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "manager/equipment_form.html")
 
+    def test_equipment_assignment_access(self):
+        response = self.client.get(
+            get_equipment_assignment_url(self.test_equipment.id)
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "manager/equipment_assign.html")
+
     def test_equipment_update_access(self):
         response = self.client.get(
             get_equipment_update_url(self.test_equipment.id)
@@ -200,6 +226,13 @@ class AdminEquipmentViewsTest(TestCase):
         response = self.client.get(EQUIPMENT_CREATE_URL)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "manager/equipment_form.html")
+
+    def test_equipment_assignment_access(self):
+        response = self.client.get(
+            get_equipment_assignment_url(self.test_equipment.id)
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "manager/equipment_assign.html")
 
     def test_equipment_update_access(self):
         response = self.client.get(
