@@ -38,11 +38,12 @@ def create_category(name: str = "test_category"):
 
 
 class PublicEquipmentViewsTest(TestCase):
-    def setUp(self):
-        self.test_category = create_category()
-        self.test_equipment = Equipment.objects.create(
+    @classmethod
+    def setUpTestData(cls):
+        cls.test_category = create_category()
+        cls.test_equipment = Equipment.objects.create(
             name="Test Equipment",
-            category=self.test_category,
+            category=cls.test_category,
             internal_serial_number="ABC1234567",
         )
 

@@ -38,8 +38,9 @@ def create_category(name: str = "test_category"):
 
 
 class PublicCategoryViewsTest(TestCase):
-    def setUp(self):
-        self.test_category = create_category()
+    @classmethod
+    def setUpTestData(cls):
+        cls.test_category = create_category()
 
     def test_category_list_login_required(self):
         response = self.client.get(CATEGORY_LIST_URL)

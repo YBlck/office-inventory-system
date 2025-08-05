@@ -31,9 +31,9 @@ def create_employee(username: str, role: str = "employee"):
 
 
 class PublicStaffViewsTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.test_employee = get_user_model().objects.create(
+    @classmethod
+    def setUpTestData(cls):
+        cls.test_employee = get_user_model().objects.create(
             username="test_employee",
             password="1qazcde3",
             email="test_employee@mail.com",
