@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
-
 
 LOGIN_URL = reverse("login")
 STAFF_REGISTRATION_URL = reverse("manager:staff-register")
@@ -43,6 +42,20 @@ class PublicStaffViewsTest(TestCase):
     def test_staff_register_view(self):
         response = self.client.get(STAFF_REGISTRATION_URL)
         self.assertEqual(response.status_code, 200)
+
+        payload = {
+            "username": "test_username",
+            "password1": "1qazcde3",
+            "password2": "1qazcde3",
+            "email": "test_email@example.com",
+        }
+
+        self.client.post(STAFF_REGISTRATION_URL, data=payload)
+        new_staff = get_user_model().objects.get(username=payload["username"])
+
+        self.assertEqual(new_staff.username, payload["username"])
+        self.assertEqual(new_staff.email, payload["email"])
+        self.assertEqual(new_staff.role, "employee")
 
     def test_staff_list_login_required(self):
         response = self.client.get(STAFF_LIST_URL)
@@ -126,6 +139,20 @@ class EmployeeStaffViewsTest(TestCase):
         self.assertTemplateUsed(response, "manager/staff_form.html")
         self.assertContains(response, self.employee.username)
 
+        payload = {
+            "first_name": "test_first_name",
+            "last_name": "test_last_name",
+            "email": "new_email@example.com",
+            "role": "employee",
+        }
+
+        self.client.post(get_staff_update_url(self.employee.id), data=payload)
+        updated_employee = get_user_model().objects.get(id=self.employee.id)
+
+        self.assertEqual(updated_employee.first_name, payload["first_name"])
+        self.assertEqual(updated_employee.last_name, payload["last_name"])
+        self.assertEqual(updated_employee.email, payload["email"])
+
     def test_staff_update_other_employee_profile_access(self):
         other_user = create_employee("other_test_user")
         response = self.client.get(get_staff_update_url(other_user.id))
@@ -172,6 +199,20 @@ class AdminStaffViewsTest(TestCase):
         response = self.client.get(get_staff_update_url(other_user.id))
         self.assertEqual(response.status_code, 200)
 
+        payload = {
+            "first_name": "test_first_name",
+            "last_name": "test_last_name",
+            "email": "new_email@example.com",
+            "role": "employee",
+        }
+
+        self.client.post(get_staff_update_url(other_user.id), data=payload)
+        updated_employee = get_user_model().objects.get(id=other_user.id)
+
+        self.assertEqual(updated_employee.first_name, payload["first_name"])
+        self.assertEqual(updated_employee.last_name, payload["last_name"])
+        self.assertEqual(updated_employee.email, payload["email"])
+
     def test_staff_delete_other_user_profile_access(self):
         other_user = create_employee("other_test_user")
         response = self.client.get(get_staff_delete_url(other_user.id))
@@ -180,3 +221,17 @@ class AdminStaffViewsTest(TestCase):
     def test_staff_create_employee_access(self):
         response = self.client.get(STAFF_CREATE_URL)
         self.assertEqual(response.status_code, 200)
+
+        payload = {
+            "username": "test_employee",
+            "email": "test@example.com",
+            "password1": "1qazcde3",
+            "password2": "1qazcde3",
+        }
+        self.client.post(STAFF_CREATE_URL, data=payload)
+        new_employee = get_user_model().objects.get(
+            username=payload["username"]
+        )
+
+        self.assertEqual(new_employee.username, payload["username"])
+        self.assertEqual(new_employee.email, payload["email"])
